@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Category &amp; Details tooltip</title>
+<link type="text/css" href="../../lib/example.css" rel="stylesheet" />
+<script type="text/javascript" src="../../lib/require.js"></script>
+<script type="text/javascript" src="../../lib/require.config.js"></script>
+<body>
+<!-- Example 1 -->
+<div class="example">
+    <div class="code">
+        <pre>pvc.ext.categoryDetailsTooltip()
+    (cd);</pre>
+    </div>
+    <div id="example1"></div>
+</div>
+
+<!-- Example 2 -->
+<div class="example">
+    <div class="code">
+        <pre>pvc.ext.categoryDetailsTooltip()
+    .ignoreNulls(false)
+    .showTotal(true)
+    .categoryVisible(false)
+    (cd);</pre>
+    </div>
+    <div id="example2"></div>
+</div>
+
+<!-- Example 3 -->
+<div class="example">
+    <div class="code">
+        <pre>pvc.ext.categoryDetailsTooltip()
+    .ignoreNulls(false)
+    .showTotal(true)
+    (cd);</pre>
+    </div>
+    <div id="example3"></div>
+</div>
+<script>
+require(['cdf/lib/CCC/pvc', 'data', './categoryDetailsTooltip'], function(pvc, data) {
+    var cd;
+
+    // ---------
+    // Example 1 - Bar Chart
+    cd = {
+        canvas: "example1",
+        width:  400,
+        height: 300,
+        title:  "Bar chart",
+        animate:    false,
+        selectable: true,
+        hoverable:  true,
+        legend:     true,
+        stacked:    true
+    };
+
+    pvc.ext.categoryDetailsTooltip()
+        (cd);
+
+    new pvc.BarChart(cd)
+        .setData(data.relational_01_neg, {crosstabMode: false})
+        .render();
+
+    // ----------
+    // Example 2 - Line Chart
+    cd = {
+        canvas: "example2",
+        width:  400,
+        height: 300,
+        title:  "Line chart",
+        animate:    false,
+        selectable: true,
+        hoverable:  true,
+        legend:     true,
+        stacked:    true
+    };
+
+    pvc.ext.categoryDetailsTooltip()
+        .ignoreNulls(false)
+        .showTotal(true)
+        .categoryVisible(false)
+        (cd);
+
+    new pvc.LineChart(cd)
+        .setData(data.relational_01_neg, {crosstabMode: false})
+        .render();
+
+    // ----------
+    // Example 3 - Line Chart 2
+    cd = {
+        canvas: "example3",
+        width:  400,
+        height: 300,
+        title:  "Line chart",
+        animate:    false,
+        selectable: true,
+        hoverable:  true,
+        legend:     true,
+        stacked:    true
+    };
+
+    pvc.ext.categoryDetailsTooltip()
+        .ignoreNulls(false)
+        .showTotal(true)
+        (cd);
+
+    new pvc.LineChart(cd)
+        .setData(data.relational_01_neg, {crosstabMode: false})
+        .render();
+});
+</script>

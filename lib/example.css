@@ -1,0 +1,22 @@
+body, html {
+    font-size: 12px;
+    font-family: "helvetica"
+}
+
+.example {
+    margin: 20px;
+    float: left;
+    clear: both;
+}
+
+.example .code {
+    padding-left: 1em; 
+    line-height: 1.1em;
+    border: solid 1px gray;
+    color: gray;
+}
+
+
+.example svg {
+    border: dashed 1px black;
+}
