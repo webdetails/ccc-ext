@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Crosshair</title>
+<link type="text/css" href="../../lib/example.css" rel="stylesheet" />
+<script type="text/javascript" src="../../lib/require.js"></script>
+<script type="text/javascript" src="../../lib/require.config.js"></script>
+<body>
+<!-- Example 1 -->
+<div class="example">
+    <div class="code">
+        <pre>cd.baseAxisHair = true;
+cd.baseAxisGrid = true;
+
+cd.pointing = {collapse: "y"};</pre>
+    </div>
+    <div id="example1"></div>
+</div>
+
+<!-- Example 2 -->
+<div class="example">
+    <div class="code">
+        <pre>cd.baseAxisHair = true;
+cd.baseAxisGrid = true;
+cd.baseAxisTicks = true;
+
+cd.pointing = {collapse: "y"};
+
+pvc.ext.bandCenteredGridlines()
+    .axis("base")
+    .install(cd);</pre>
+    </div>
+    <div id="example2"></div>
+</div>
+
+<!-- Example 3 -->
+<div class="example">
+    <div class="code">
+        <pre>cd.axisHair = true;
+cd.axisHairRule_strokeStyle = "#999";
+cd.pointing = {radius: Infinity};</pre>
+
+        Hover over the axes labels as well.
+    </div>
+    <div id="example3"></div>
+</div>
+<script>
+require(['cdf/lib/CCC/pvc', 'data', './crosshair', '../bandCenteredGridlines/bandCenteredGridlines'],
+        function(pvc, data) {
+    var cd;
+
+    // ---------
+    // Example 1 - Continuous Line Chart
+    cd = {
+        canvas: "example1",
+        width:  500,
+        height: 250,
+        title:  "Line chart - continuous",
+        titleFont: "bold 16px sans-serif",
+        titleAlign: "left",
+        titleMargins: 10,
+        animate:    false,
+        selectable: true,
+        hoverable:  true,
+        legend:     true,
+        stacked:    true,
+        timeSeries: true,
+        baseAxisHair: true,
+        baseAxisTickUnit: "m",
+        baseAxisGrid: true,
+        tooltipEnabled: false,
+        pointing: {collapse: "y"}
+    };
+
+    new pvc.LineChart(cd)
+        .setData(data.relational_01_neg, {crosstabMode: false})
+        .render();
+
+    // ---------
+    // Example 2 - Discrete Line/Area Chart
+    cd = {
+        canvas: "example2",
+        width:  500,
+        height: 250,
+        title:  "Line/Area chart - discrete",
+        titleFont: "bold 16px sans-serif",
+        titleAlign: "left",
+        titleMargins: 10,
+        animate:    false,
+        selectable: true,
+        hoverable:  true,
+        legend:     true,
+        stacked:    true,
+        baseAxisHair: true,
+        baseAxisGrid: true,
+        baseAxisTicks: true,
+        baseAxisLabelSpacingMin: 4,
+        tooltipEnabled: false,
+        pointing: {collapse: "y"},
+        areasVisible: true
+    };
+
+    pvc.ext.bandCenteredGridlines()
+        .axis("base")
+        .install(cd);
+
+    new pvc.LineChart(cd)
+        .setData(data.relational_01_neg, {crosstabMode: false})
+        .render();
+
+    // ---------
+    // Example 3 - Heat Grid Chart
+    cd = {
+        canvas: "example3",
+        width:  350,
+        height: 350,
+        orientation: "horizontal",
+
+        title:     "Heat Grid",
+        titleFont: "bold 16px sans-serif",
+        titleAlign: "left",
+        titleMargins: 10,
+
+        animate:    false,
+        selectable: true,
+        hoverable:  true,
+
+        margins:    {all: 10, right: 40, top: 0},
+
+        orthoAxisPosition: "top",
+        plotFrameVisible: true,
+
+        useShapes:  true,
+        shape:      "circle",
+
+        categoryRole: {isReversed: true},
+        sizeRole:     {from: "color"},
+
+        dot_shapeSize: function() { return this.delegate() * 0.6; },
+        dot_fillStyle: function() { return this.delegate().alpha(0.6); },
+
+        tooltipFormat: function(scene) { return scene.vars.size.label; },
+        tooltipOpacity: 0.7,
+        tooltipGravity: "w",
+
+        dot_shapeSize: pvc.finished(),
+
+        axisHair: true,
+        pointing: {radius: Infinity},
+        axisHairRule_strokeStyle: "#666"
+    };
+    /*
+    pvc.ext.bandCenteredGridlines()
+        .axis("both")
+        .install(cd);
+    */
+    new pvc.HeatGridChart(cd)
+        .setData(data.relational_01_neg, {crosstabMode: false})
+        .render();
+});
+</script>

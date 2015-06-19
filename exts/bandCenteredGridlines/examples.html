@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Category &amp; Details tooltip</title>
+<link type="text/css" href="../../lib/example.css" rel="stylesheet" />
+<script type="text/javascript" src="../../lib/require.js"></script>
+<script type="text/javascript" src="../../lib/require.config.js"></script>
+<body>
+<!-- Example 1 -->
+<div class="example">
+    <div class="code">
+        <pre>pvc.ext.bandCenteredGridlines()
+    .install(cd);</pre>
+    </div>
+    <div id="example1"></div>
+</div>
+    
+<!-- Example 2 -->
+<div class="example">
+    <div class="code">
+        <pre>pvc.ext.bandCenteredGridlines()
+    .install(cd);</pre>
+    </div>
+    <div id="example2"></div>
+</div>
+    
+<!-- Example 3 -->
+<div class="example">
+    <div class="code">
+        <pre>pvc.ext.bandCenteredGridlines()
+    .axis("both")
+    .install(cd);</pre>
+    </div>
+    <div id="example3"></div>
+</div>
+<script>
+require(['cdf/lib/CCC/pvc', 'data', './bandCenteredGridlines'], function(pvc, data) {
+    var cd;
+    
+    // ---------
+    // Example 1 - Line Chart
+    cd = {
+        canvas: "example1",
+        width:  800,
+        height: 300,
+        title:  "Line chart",
+        titleFont: "bold 16px sans-serif",
+        titleAlign: "left",
+        titleMargins: 10,
+        animate:    false,
+        selectable: true,
+        hoverable:  true,
+        legend:     true,
+        stacked:    true
+    };
+
+    pvc.ext.bandCenteredGridlines()
+        .install(cd);
+
+    new pvc.LineChart(cd)
+        .setData(data.relational_01_neg, {crosstabMode: false})
+        .render();
+    
+    // ----------
+    // Example 2 - Horizontal Line Chart 
+    cd = {
+        canvas: "example2",
+        width:  500,
+        height: 400,
+        orientation: "horizontal",
+        title:  "Line chart — horizontal",
+        titleFont: "bold 16px sans-serif",
+        titleAlign: "left",
+        titleMargins: 10,
+        animate:    false,
+        selectable: true,
+        hoverable:  true,
+        legend:     true,
+        stacked:    true
+    };
+
+    pvc.ext.bandCenteredGridlines()
+        .install(cd);
+
+    new pvc.LineChart(cd)
+        .setData(data.relational_01_neg, {crosstabMode: false})
+        .render();
+    
+    // ----------
+    // Example 3 - Heat Grid 
+    cd = {
+        canvas: "example3",
+        width:  350,
+        height: 350,
+        orientation: "horizontal",
+        title:     "Heat Grid — horizontal",
+        titleFont: "bold 16px sans-serif",
+        titleAlign: "left",
+        titleMargins: 10,
+        animate:    false,
+        selectable: true,
+        hoverable:  true,
+        margins:    {all: 10, right: 40, top: 0},
+        orthoAxisPosition: "top",
+        plotFrameVisible: true,
+        useShapes:  true,
+        shape:      "circle",
+        categoryRole: {isReversed: true},
+        sizeRole:     {from: "color"},
+        dot_shapeSize: function() { return this.delegate() * 0.6; },
+        dot_fillStyle: function() { return this.delegate().alpha(0.6); }
+    };
+
+    pvc.ext.bandCenteredGridlines()
+        .axis("both")
+        .install(cd);
+
+    new pvc.HeatGridChart(cd)
+        .setData(data.relational_01_neg, {crosstabMode: false})
+        .render();
+});
+</script>

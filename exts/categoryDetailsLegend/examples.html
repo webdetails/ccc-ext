@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Category &amp; Details tooltip</title>
+<link type="text/css" href="../../lib/example.css" rel="stylesheet" />
+<script type="text/javascript" src="../../lib/require.js"></script>
+<script type="text/javascript" src="../../lib/require.config.js"></script>
+<body>
+<!-- Example 1.0 - RIGHT -->
+<div class="example">
+    <div class="code">
+        <pre>pvc.ext.categoryDetailsLegend()
+    .position("right")
+    .install(cd);</pre>
+    </div>
+    <div id="example1"></div>
+</div>
+
+<!-- Example 1.1 - LEFT -->
+<div class="example">
+    <div class="code">
+        <pre>pvc.ext.categoryDetailsLegend()
+    .position("left")
+    .inactiveCategoryAggregation("none")
+    .inactiveCategoryLabel("")
+    .install(cd);</pre>
+    </div>
+    <div id="example11"></div>
+</div>
+
+<!-- Example 2 -->
+<div class="example">
+    <div class="code">
+        <pre>pvc.ext.categoryDetailsLegend()
+    .categoryLabelFont("9px Open Sans")
+    .inactiveCategoryLabel("Altiore")
+    .categoryLabelSizeH(80)
+    .install(cd);</pre>
+    </div>
+    <div id="example2"></div>
+</div>
+<script>
+require(['cdf/lib/CCC/pvc', 'data', './categoryDetailsLegend'], function(pvc, data) {
+    var cd;
+
+    // ---------
+    // Example 1.0 - Bar Chart - legend right
+    cd = {
+        canvas:     "example1",
+        width:      700,
+        height:     300,
+        title:      "Bar chart — legend at right",
+        titleFont:  "bold 16px sans-serif",
+        titleAlign: "left",
+
+        animate:    false,
+        selectable: false,
+        hoverable:  true,
+        legend:     true,
+        stacked:    true,
+        tooltipEnabled: true,
+
+        plot2: true,
+        plot2Series: ['Paris'],
+        plot2OrthoAxis: 2,
+        plot2ColorAxis: 2,
+        plot2NullInterpolationMode: 'linear',
+
+        plot2Dot_ibits:  0,
+        plot2Line_ibits: 0,
+        plot2Dot_imask:  pvc.visual.Interactive.ShowsTooltip | pvc.visual.Interactive.Hoverable,
+        plot2Line_imask: pvc.visual.Interactive.ShowsTooltip | pvc.visual.Interactive.Hoverable,
+
+        trendType: 'linear',
+        trendOrthoAxis: 3,
+        trendAreasVisible: true,
+        trendLine_strokeDasharray: '- ',
+
+        legendSizeMax: {height: 150}
+    };
+
+    pvc.ext.categoryDetailsLegend()
+        .position("right")
+        .install(cd);
+
+    new pvc.BarChart(cd)
+        .setData(data.relational_01_neg, {crosstabMode: false})
+        .render();
+
+    // ---------
+    // Example 1.1 - Bar Chart - legend left
+
+    cd = {
+        canvas: "example11",
+        width:  700,
+        height: 300,
+
+        title:  "Bar chart — legend at left",
+        titleFont: "bold 16px sans-serif",
+        titleAlign: "left",
+
+        animate:    false,
+        selectable: false,
+        hoverable:  true,
+        legend:     true,
+        stacked:    true,
+
+        plot2: true,
+        plot2Series: ['Paris'],
+        plot2OrthoAxis: 2,
+        plot2ColorAxis: 2,
+        plot2NullInterpolationMode: 'linear',
+
+        trendType: 'linear',
+        trendOrthoAxis: 3,
+        trendAreasVisible: true,
+        trendLine_strokeDasharray: '- ',
+
+        legendSizeMax: {height: 150}
+    };
+
+    pvc.ext.categoryDetailsLegend()
+        .position("left")
+        .inactiveCategoryAggregation("none")
+        .inactiveCategoryLabel("")
+        .install(cd);
+
+    new pvc.BarChart(cd)
+        .setData(data.relational_01_neg, {crosstabMode: false})
+        .render();
+
+    // ----------
+    // Example 2 - Line Chart - legend top
+    cd = {
+        canvas: "example2",
+        width:  700,
+        height: 400,
+        title:  "Line chart — different category label",
+        titleFont: "bold 16px sans-serif",
+        titleAlign: "left",
+
+        animate:    false,
+        selectable: true,
+        hoverable:  true,
+        legend:     true,
+        stacked:    true,
+
+        plot2: true,
+        plot2Series: ['Paris'],
+        plot2OrthoAxis: 2,
+        plot2ColorAxis: 2,
+        plot2NullInterpolationMode: 'linear',
+
+        trendType: 'linear',
+        trendOrthoAxis: 3,
+        trendAreasVisible: true,
+        trendLine_strokeDasharray: '- ',
+
+        legendSizeMax: {width: 450}
+    };
+
+    pvc.ext.categoryDetailsLegend()
+        .categoryLabelFont("9px Open Sans")
+        .categoryLabelSizeH(80)
+        .inactiveCategoryLabel("Altiore")
+        .install(cd);
+
+    new pvc.LineChart(cd)
+        .setData(data.relational_01_neg, {crosstabMode: false})
+        .render();
+});
+</script>
