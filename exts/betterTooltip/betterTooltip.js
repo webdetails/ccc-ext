@@ -18,6 +18,53 @@
 
     function moduleDef(def, pvc) {
 
+        /**
+         * @class
+         * @name pvc.ext.BetterTooltip
+         *
+         * @classdesc A rich HTML tooltip.
+         *
+         * To create an instance, use the factory function
+         * {@link pvc.ext.betterTooltip}.
+         *
+         * ## Basic Usage
+         * Include the extension's files:
+         *
+         * 1. `betterTooltip.js`
+         * 2. `betterTooltip.css`
+         *
+         * (If using AMD/Require-JS, the "css" AMD plugin must be registered and
+         * will automatically load the accompanying stylesheet).
+         *
+         * In CDE, add the file or files as dashboard resources.
+         *
+         * Then, within a CDF chart component's `preExecution` handler, write:
+         * ```javascript
+         * pvc.ext.betterTooltip()
+         *      .install(this.chartDefinition);
+         * ```
+         *
+         * ## Usage
+         *
+         * #### Displaying values in percentage, fallback to value if not available
+         *
+         * ```javascript
+         * pvc.ext.betterTooltip()
+         *      .measuresValueFormatString("{value.percent.label|value.label}")
+         *      .install(this.chartDefinition);
+         * ```
+         * ## Live examples
+         *
+         * [Examples page](examples/exts/betterTooltip/examples.html).
+         */
+
+        /**
+         * Creates a rich HTML tooltip formatter.
+         * @alias betterTooltip
+         * @memberOf pvc.ext
+         * @function
+         * @return {pvc.ext.BetterTooltip} A new tooltip formatter.
+         */
         function betterTooltip() {
             var _categoryLabelFormatString = "{label}:&nbsp;{value.label}";
             var _categoryLabelFormatFunction = defaultFormatFunction;
@@ -47,14 +94,63 @@
                 return cd;
             }
 
+            /**
+             * Installs this extension in a given chart definition.
+             *
+             * The formatter instance itself can be called as a function,
+             * being equivalent to calling this method.
+             *
+             * This function defaults the properties:
+             * * `tooltipEnabled` — `true`
+             * * `tooltipOpacity` — `1`
+             * * `tooltipGravity` — `"s"`
+             * * `tooltipClassName` — `"ccc-ext-better-tooltip"`
+             * * `tooltipFollowMouse` — `true`
+             *
+             * This function sets the required property: `tooltipFormat`.
+             *
+             * @name pvc.ext.BetterTooltip#install
+             * @function
+             * @param {Object} cd The chart definition to extend.
+             * @param {boolean} [defaults=false] Indicates that
+             * only required or optional properties not present in the chart definition are set.
+             * @return {pvc.ext.BetterTooltip} This instance.
+             */
             formatter.install = formatter;
 
+            /**
+             * Formats an HTML tooltip for a given scene.
+             *
+             * This function can be called on any `this` context,
+             * and will always exhibit the same behavior.
+             *
+             * Normally you would not use this function directly,
+             * as {@link pvc.ext.BetterTooltip#install}
+             * sets this as the chart"s `tooltipFormat` for you.
+             *
+             * @alias format
+             * @memberOf pvc.ext.BetterTooltip#
+             * @function
+             * @param {pvc.visual.Scene} scene The categorical scene for which to render the tooltip.
+             * @return {string} The tooltip HTML string.
+             */
             formatter.format = function(scene) {
                 var model = buildModel.call(formatter, scene);
 
                 return betterTooltipRenderer.call(formatter, model);
             };
 
+            /**
+             * Gets or sets the format string for the label of the category. Used by the default label formater.
+             *
+             * Defaults to "{label}:&nbsp;{value.label}".
+             *
+             * @alias categoryLabelFormatString
+             * @memberOf pvc.ext.BetterTooltip#
+             * @function
+             * @param {string} [_] The new value.
+             * @return {pvc.ext.BetterTooltip|string} The property value, when getting, `this` instance, when setting.
+             */
             formatter.categoryLabelFormatString = function(_) {
                 if(arguments.length) {
                     _categoryLabelFormatString = _;
@@ -64,6 +160,20 @@
                 return _categoryLabelFormatString;
             };
 
+            /**
+             * Gets or sets the format function for the label of the category.
+             *
+             * The default format function uses the categoryLabelFormatString property for creating the label.
+             *
+             * Custom formaters receive the full tooltip model object, the category being formated and the
+             * current value of the categoryLabelFormatString property. Must return the formatted label.
+             *
+             * @alias categoryLabelFormatFunction
+             * @memberOf pvc.ext.BetterTooltip#
+             * @function
+             * @param {function} [_] The new value.
+             * @return {pvc.ext.BetterTooltip|function} The property value, when getting, `this` instance, when setting.
+             */
             formatter.categoryLabelFormatFunction = function(_) {
                 if(arguments.length) {
                     _categoryLabelFormatFunction = _;
@@ -73,6 +183,17 @@
                 return _categoryLabelFormatFunction;
             };
 
+            /**
+             * Gets or sets the format string for the label of the series. Used by the default label formater.
+             *
+             * Defaults to "{value.label}".
+             *
+             * @alias seriesLabelFormatString
+             * @memberOf pvc.ext.BetterTooltip#
+             * @function
+             * @param {string} [_] The new value.
+             * @return {pvc.ext.BetterTooltip|string} The property value, when getting, `this` instance, when setting.
+             */
             formatter.seriesLabelFormatString = function(_) {
                 if(arguments.length) {
                     _seriesLabelFormatString = _;
@@ -82,6 +203,20 @@
                 return _seriesLabelFormatString;
             };
 
+            /**
+             * Gets or sets the format function for the label of the series.
+             *
+             * The default format function uses the seriesLabelFormatString property for creating the label.
+             *
+             * Custom formaters receive the full tooltip model object, the series being formated and the
+             * current value of the seriesLabelFormatString property. Must return the formatted label.
+             *
+             * @alias seriesLabelFormatFunction
+             * @memberOf pvc.ext.BetterTooltip#
+             * @function
+             * @param {function} [_] The new value.
+             * @return {pvc.ext.BetterTooltip|function} The property value, when getting, `this` instance, when setting.
+             */
             formatter.seriesLabelFormatFunction = function(_) {
                 if(arguments.length) {
                     _seriesLabelFormatFunction = _;
@@ -91,6 +226,17 @@
                 return _seriesLabelFormatFunction;
             };
 
+            /**
+             * Gets or sets the format string for the label of the measures. Used by the default label formater.
+             *
+             * Defaults to "{label}".
+             *
+             * @alias measuresLabelFormatString
+             * @memberOf pvc.ext.BetterTooltip#
+             * @function
+             * @param {string} [_] The new value.
+             * @return {pvc.ext.BetterTooltip|string} The property value, when getting, `this` instance, when setting.
+             */
             formatter.measuresLabelFormatString = function(_) {
                 if(arguments.length) {
                     _measuresLabelFormatString = _;
@@ -100,6 +246,20 @@
                 return _measuresLabelFormatString;
             };
 
+            /**
+             * Gets or sets the format function for the label of the measures.
+             *
+             * The default format function uses the measuresLabelFormatString property for creating the label.
+             *
+             * Custom formaters receive the full tooltip model object, the measure being formated and the
+             * current value of the measuresLabelFormatString property. Must return the formatted label.
+             *
+             * @alias measuresLabelFormatFunction
+             * @memberOf pvc.ext.BetterTooltip#
+             * @function
+             * @param {function} [_] The new value.
+             * @return {pvc.ext.BetterTooltip|function} The property value, when getting, `this` instance, when setting.
+             */
             formatter.measuresLabelFormatFunction = function(_) {
                 if(arguments.length) {
                     _measuresLabelFormatFunction = _;
@@ -109,6 +269,17 @@
                 return _measuresLabelFormatFunction;
             };
 
+            /**
+             * Gets or sets the format string for the value of the measures. Used by the default label formater.
+             *
+             * Defaults to "{value}".
+             *
+             * @alias measuresValueFormatString
+             * @memberOf pvc.ext.BetterTooltip#
+             * @function
+             * @param {string} [_] The new value.
+             * @return {pvc.ext.BetterTooltip|string} The property value, when getting, `this` instance, when setting.
+             */
             formatter.measuresValueFormatString = function(_) {
                 if(arguments.length) {
                     _measuresValueFormatString = _;
@@ -118,6 +289,20 @@
                 return _measuresValueFormatString;
             };
 
+            /**
+             * Gets or sets the format function for the value of the measures.
+             *
+             * The default format function uses the measuresValueFormatString property for creating the value.
+             *
+             * Custom formaters receive the full tooltip model object, the measure being formated and the
+             * current value of the measuresValueFormatString property. Must return the formatted value.
+             *
+             * @alias measuresValueFormatFunction
+             * @memberOf pvc.ext.BetterTooltip#
+             * @function
+             * @param {function} [_] The new value.
+             * @return {pvc.ext.BetterTooltip|function} The property value, when getting, `this` instance, when setting.
+             */
             formatter.measuresValueFormatFunction = function(_) {
                 if(arguments.length) {
                     _measuresValueFormatFunction = _;
@@ -130,6 +315,13 @@
             return formatter;
         }
 
+        /**
+         * Builds the tooltip model from the CCC scene information.
+         *
+         * @param {Object} scene The CCC scene.
+         *
+         * @return {Object} The tooltip model.
+         */
         function buildModel(scene) {
             var tooltipModels = {
                 category: null,
@@ -211,6 +403,16 @@
             }
         }
 
+        /**
+         * The default format function replaces tokens in the received format string
+         * with values from the current tooltipModel subject (category, series, measure).
+         *
+         * @param {Object} tooltipModel The tooltip model object (not used by the default formater).
+         * @param {Object} subject The current tooltip subject being formated.
+         * @param {string} formatString The format string.
+         *
+         * @return {string} The formated text.
+         */
         function defaultFormatFunction(tooltipModel, subject, formatString) {
             var matcher = /\{(.*?)\}/g;
 
@@ -239,6 +441,14 @@
             return result;
         }
 
+        /**
+         * The renderer method is called with a pre-built tooltip model object,
+         * and having the formater instance as `this` context.
+         *
+         * @param {Object} tooltipModel The tooltip model object.
+         *
+         * @return {string} The HTML of the rendered tooltip.
+         */
         function betterTooltipRenderer(tooltipModel) {
             var baseElement = document.createElement("div");
 
