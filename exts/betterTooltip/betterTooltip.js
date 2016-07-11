@@ -48,7 +48,84 @@
         }
 
         function buildModel(scene) {
-            
+            var tooltipModels = {
+                category: null,
+                series:   null,
+                measures: [] 
+            };
+
+            var dimensions = scene.root.chart().data.type.dimensions();
+
+            for(var key in dimensions) {
+                var dimValue = getDimensionValue(key);
+
+                if(isContinue(dimValue, key)) continue;
+
+                var dimInfo = {value: dimValue, label: dimensions[key].label || ""};
+
+                if(key === "category") {
+                    var isNumeric = !isNaN(dimValue.value);
+
+                    if(isNumeric) tooltipModels.measures.push(dimInfo);
+                    else tooltipModels.category = dimInfo;
+
+                } else {
+                    dimInfo.value = scene.vars[key];
+                    tooltipModels.measures.push(dimInfo);
+                    
+                }
+            }
+
+            tooltipModels.series = getSeriesInfo();
+
+            return tooltipModels;
+
+            // ------ Private functions
+
+            function isContinue(value, key) {
+                if(!value) return true;
+
+                var reg = /^(series|\D+\d)$/;
+                return reg.exec(key) != null;
+            }
+
+            function getDimensionValue(key) {
+                var dimVar  = scene.vars[key]  || {},
+                    dimAtom = scene.atoms[key] || {};
+
+                var value = dimVar.value || dimAtom.value;
+                if(!value) return null;
+
+                var label = dimVar.label || dimAtom.label;
+                return {value: value, label: label};
+            }
+
+            function getSeriesInfo() {
+                var series      = dimensions.series; 
+                var seriesValue = scene.getSeries();
+
+                var rootColor   = scene.root.panel().axes.color;
+                var colorVar    = scene.vars.color;
+                var color       = rootColor.isDiscrete() && colorVar ? rootColor.scale(colorVar).color : null;
+
+                var value;
+                if(seriesValue != null) {
+                    value = {
+                        value: seriesValue,
+                        label: scene.getSeriesLabel()
+                    };
+                } else {
+                    var firstMeasure = tooltipModels.measures[0]
+                    value = {value: firstMeasure.value, label: ""};
+
+                    if(tooltipModels.category && (!series || tooltipModels.measures.length > 1)) {
+                        value.label = tooltipModels.category.value.label;
+                        tooltipModels.category = null;
+                    } else value.label = firstMeasure.label;
+                }
+
+                return {color: color, value: value, label: (series && series.label) || ""};
+            }
         }
 
         function betterTooltipRenderer(tooltipModel) {
