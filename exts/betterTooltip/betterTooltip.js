@@ -19,7 +19,18 @@
     function moduleDef(def, pvc) {
 
         function betterTooltip() {
-            
+            var _categoryLabelFormatString = "{label}:&nbsp;{value.label}";
+            var _categoryLabelFormatFunction = defaultFormatFunction;
+
+            var _seriesLabelFormatString = "{value.label}";
+            var _seriesLabelFormatFunction = defaultFormatFunction;
+
+            var _measuresLabelFormatString = "{label}";
+            var _measuresLabelFormatFunction = defaultFormatFunction;
+
+            var _measuresValueFormatString = "{value.label}";
+            var _measuresValueFormatFunction = defaultFormatFunction;
+
             function formatter(cd, defaults) {
                 // Optional
                 var copy = (defaults ? def.setUDefaults : def.copyOwn);
@@ -42,6 +53,78 @@
                 var model = buildModel.call(formatter, scene);
 
                 return betterTooltipRenderer.call(formatter, model);
+            };
+
+            formatter.categoryLabelFormatString = function(_) {
+                if(arguments.length) {
+                    _categoryLabelFormatString = _;
+                    return formatter;
+                }
+
+                return _categoryLabelFormatString;
+            };
+
+            formatter.categoryLabelFormatFunction = function(_) {
+                if(arguments.length) {
+                    _categoryLabelFormatFunction = _;
+                    return formatter;
+                }
+
+                return _categoryLabelFormatFunction;
+            };
+
+            formatter.seriesLabelFormatString = function(_) {
+                if(arguments.length) {
+                    _seriesLabelFormatString = _;
+                    return formatter;
+                }
+
+                return _seriesLabelFormatString;
+            };
+
+            formatter.seriesLabelFormatFunction = function(_) {
+                if(arguments.length) {
+                    _seriesLabelFormatFunction = _;
+                    return formatter;
+                }
+
+                return _seriesLabelFormatFunction;
+            };
+
+            formatter.measuresLabelFormatString = function(_) {
+                if(arguments.length) {
+                    _measuresLabelFormatString = _;
+                    return formatter;
+                }
+
+                return _measuresLabelFormatString;
+            };
+
+            formatter.measuresLabelFormatFunction = function(_) {
+                if(arguments.length) {
+                    _measuresLabelFormatFunction = _;
+                    return formatter;
+                }
+
+                return _measuresLabelFormatFunction;
+            };
+
+            formatter.measuresValueFormatString = function(_) {
+                if(arguments.length) {
+                    _measuresValueFormatString = _;
+                    return formatter;
+                }
+
+                return _measuresValueFormatString;
+            };
+
+            formatter.measuresValueFormatFunction = function(_) {
+                if(arguments.length) {
+                    _measuresValueFormatFunction = _;
+                    return formatter;
+                }
+
+                return _measuresValueFormatFunction;
             };
 
             return formatter;
@@ -128,8 +211,107 @@
             }
         }
 
+        function defaultFormatFunction(tooltipModel, subject, formatString) {
+            var matcher = /\{(.*?)\}/g;
+
+            var result = formatString;
+
+            var match;
+            while(match = matcher.exec(formatString)) {
+                var alternatives = match[1].split("|");
+
+                while(alternatives.length) {
+                    var path = alternatives.shift().split(".");
+
+                    var value = subject;
+                    while(value && path.length) {
+                        value = value[path.shift()];
+                    }
+
+                    if(value) {
+                        result = result.replace(match[0], def.html.escape(value.toString()));
+                        // skip remaining alternatives
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
         function betterTooltipRenderer(tooltipModel) {
-            
+            var baseElement = document.createElement("div");
+
+            if(tooltipModel.category) {
+                var titleElement = document.createElement("h1");
+                titleElement.innerHTML = defaultFormatFunction(tooltipModel, tooltipModel.category, this.categoryLabelFormatString());
+
+                baseElement.appendChild(titleElement);
+            }
+
+            var seriesElement = document.createElement("div");
+            seriesElement.className = "series";
+
+            var labelElement = document.createElement("h2");
+
+            if(tooltipModel.series != null) {
+                if(tooltipModel.series.color != null) {
+                    var colorElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                    colorElement.style.fill = tooltipModel.series.color;
+                    colorElement.setAttribute("viewBox", "0 0 4 4");
+                    colorElement.setAttribute("class", "color");
+
+                    var circleElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    circleElement.setAttribute("cx", "2");
+                    circleElement.setAttribute("cy", "2");
+                    circleElement.setAttribute("r", "2");
+
+                    colorElement.appendChild(circleElement);
+
+                    seriesElement.appendChild(colorElement);
+                }
+
+                labelElement.innerHTML = defaultFormatFunction(tooltipModel, tooltipModel.series, this.seriesLabelFormatString());
+                seriesElement.appendChild(labelElement);
+            }
+
+            baseElement.appendChild(seriesElement);
+
+            if(tooltipModel.measures) {
+                if(tooltipModel.measures.length === 1) {
+                    var measure = tooltipModel.measures[0];
+                    var valueElement = document.createElement("span");
+                    valueElement.innerHTML = defaultFormatFunction(tooltipModel, measure, this.measuresValueFormatString());
+
+                    seriesElement.appendChild(valueElement);
+                } else {
+                    var measuresElement = document.createElement("ul");
+                    measuresElement.className = "measures-container";
+
+                    tooltipModel.measures.forEach(function(measure) {
+                        var measureElement = document.createElement("li");
+                        measureElement.className = "measure";
+
+                        var labelElement = document.createElement("h3");
+                        labelElement.innerHTML = defaultFormatFunction(tooltipModel, measure, this.measuresLabelFormatString());
+
+                        measureElement.appendChild(labelElement);
+
+                        if(measure.value != null) {
+                            var valueElement = document.createElement("span");
+                            valueElement.innerHTML = defaultFormatFunction(tooltipModel, measure, this.measuresValueFormatString());
+
+                            measureElement.appendChild(valueElement);
+                        }
+
+                        measuresElement.appendChild(measureElement);
+                    }, this);
+
+                    baseElement.appendChild(measuresElement);
+                }
+            }
+
+            return baseElement.innerHTML;
         }
 
         (pvc.ext || (pvc.ext = {})).betterTooltip = betterTooltip;
