@@ -112,9 +112,12 @@
              *
              * @name pvc.ext.DetTooltip#install
              * @function
-             * @param {Object} cd The chart definition to extend.
-             * @param {boolean} [defaults=false] Indicates that
-             * only required or optional properties not present in the chart definition are set.
+             *
+             * @param {Object} cd - The chart definition to extend.
+             * @param {boolean} [defaults=false] - Indicates that only required or optional
+             *                                     properties not present in the chart definition
+             *                                     are set.
+             *
              * @return {pvc.ext.DetTooltip} This instance.
              */
             formatter.install = formatter;
@@ -132,7 +135,9 @@
              * @alias format
              * @memberOf pvc.ext.DetTooltip#
              * @function
-             * @param {pvc.visual.Scene} scene The categorical scene for which to render the tooltip.
+             *
+             * @param {pvc.visual.Scene} scene - The categorical scene for which to render the tooltip.
+             *
              * @return {string} The tooltip HTML string.
              */
             formatter.format = function(scene) {
@@ -151,7 +156,9 @@
              * @alias axisTickLabelsFormat
              * @memberOf pvc.ext.DetTooltip#
              * @function
-             * @param {pvc.visual.Scene} scene The scene with the tick for which to render the tooltip.
+             *
+             * @param {pvc.visual.Scene} scene - The scene with the tick for which to render the tooltip.
+             *
              * @return {string} The tooltip HTML string.
              */
             formatter.axisTickLabelsFormat = function(scene) {
@@ -159,15 +166,17 @@
             };
 
             /**
-             * Gets or sets the format string for the label of the category. Used by the default label formater.
+             * Gets or sets the format string for the label of the category. Used by the default label formatter.
              *
              * Defaults to "{label}:&nbsp;{value.label}".
              *
              * @alias categoryLabelFormatString
              * @memberOf pvc.ext.DetTooltip#
              * @function
-             * @param {string} [_] The new value.
-             * @return {pvc.ext.DetTooltip|string} The property value, when getting, `this` instance, when setting.
+             *
+             * @param {string} [_] - The new value.
+             *
+             * @return {pvc.ext.DetTooltip|string} The property value, when getting; `this` instance, when setting.
              */
             formatter.categoryLabelFormatString = function(_) {
                 if(arguments.length) {
@@ -183,14 +192,16 @@
              *
              * The default format function uses the categoryLabelFormatString property for creating the label.
              *
-             * Custom formaters receive the full tooltip model object, the category being formated and the
+             * Custom formatters receive the full tooltip model object, the category being formatted and the
              * current value of the categoryLabelFormatString property. Must return the formatted label.
              *
              * @alias categoryLabelFormatFunction
              * @memberOf pvc.ext.DetTooltip#
              * @function
-             * @param {function} [_] The new value.
-             * @return {pvc.ext.DetTooltip|function} The property value, when getting, `this` instance, when setting.
+             *
+             * @param {function} [_] - The new value.
+             *
+             * @return {pvc.ext.DetTooltip|function} The property value, when getting; `this` instance, when setting.
              */
             formatter.categoryLabelFormatFunction = function(_) {
                 if(arguments.length) {
@@ -202,15 +213,17 @@
             };
 
             /**
-             * Gets or sets the format string for the label of the series. Used by the default label formater.
+             * Gets or sets the format string for the label of the series. Used by the default label formatter.
              *
              * Defaults to "{value.label}".
              *
              * @alias seriesLabelFormatString
              * @memberOf pvc.ext.DetTooltip#
              * @function
-             * @param {string} [_] The new value.
-             * @return {pvc.ext.DetTooltip|string} The property value, when getting, `this` instance, when setting.
+             *
+             * @param {string} [_] - The new value.
+             *
+             * @return {pvc.ext.DetTooltip|string} The property value, when getting; `this` instance, when setting.
              */
             formatter.seriesLabelFormatString = function(_) {
                 if(arguments.length) {
@@ -226,14 +239,16 @@
              *
              * The default format function uses the seriesLabelFormatString property for creating the label.
              *
-             * Custom formaters receive the full tooltip model object, the series being formated and the
+             * Custom formatters receive the full tooltip model object, the series being formatted and the
              * current value of the seriesLabelFormatString property. Must return the formatted label.
              *
              * @alias seriesLabelFormatFunction
              * @memberOf pvc.ext.DetTooltip#
              * @function
-             * @param {function} [_] The new value.
-             * @return {pvc.ext.DetTooltip|function} The property value, when getting, `this` instance, when setting.
+             *
+             * @param {function} [_] - The new value.
+             *
+             * @return {pvc.ext.DetTooltip|function} The property value, when getting; `this` instance, when setting.
              */
             formatter.seriesLabelFormatFunction = function(_) {
                 if(arguments.length) {
@@ -245,15 +260,17 @@
             };
 
             /**
-             * Gets or sets the format string for the label of the measures. Used by the default label formater.
+             * Gets or sets the format string for the label of the measures. Used by the default label formatter.
              *
              * Defaults to "{label}".
              *
              * @alias measuresLabelFormatString
              * @memberOf pvc.ext.DetTooltip#
              * @function
-             * @param {string} [_] The new value.
-             * @return {pvc.ext.DetTooltip|string} The property value, when getting, `this` instance, when setting.
+             *
+             * @param {string} [_] - The new value.
+             *
+             * @return {pvc.ext.DetTooltip|string} The property value, when getting; `this` instance, when setting.
              */
             formatter.measuresLabelFormatString = function(_) {
                 if(arguments.length) {
@@ -269,14 +286,16 @@
              *
              * The default format function uses the measuresLabelFormatString property for creating the label.
              *
-             * Custom formaters receive the full tooltip model object, the measure being formated and the
+             * Custom formatters receive the full tooltip model object, the measure being formatted and the
              * current value of the measuresLabelFormatString property. Must return the formatted label.
              *
              * @alias measuresLabelFormatFunction
              * @memberOf pvc.ext.DetTooltip#
              * @function
-             * @param {function} [_] The new value.
-             * @return {pvc.ext.DetTooltip|function} The property value, when getting, `this` instance, when setting.
+             *
+             * @param {function} [_] - The new value.
+             *
+             * @return {pvc.ext.DetTooltip|function} The property value, when getting; `this` instance, when setting.
              */
             formatter.measuresLabelFormatFunction = function(_) {
                 if(arguments.length) {
@@ -288,15 +307,17 @@
             };
 
             /**
-             * Gets or sets the format string for the value of the measures. Used by the default label formater.
+             * Gets or sets the format string for the value of the measures. Used by the default label formatter.
              *
              * Defaults to "{value}".
              *
              * @alias measuresValueFormatString
              * @memberOf pvc.ext.DetTooltip#
              * @function
-             * @param {string} [_] The new value.
-             * @return {pvc.ext.DetTooltip|string} The property value, when getting, `this` instance, when setting.
+             *
+             * @param {string} [_] - The new value.
+             *
+             * @return {pvc.ext.DetTooltip|string} The property value, when getting; `this` instance, when setting.
              */
             formatter.measuresValueFormatString = function(_) {
                 if(arguments.length) {
@@ -312,14 +333,16 @@
              *
              * The default format function uses the measuresValueFormatString property for creating the value.
              *
-             * Custom formaters receive the full tooltip model object, the measure being formated and the
+             * Custom formatters receive the full tooltip model object, the measure being formatted and the
              * current value of the measuresValueFormatString property. Must return the formatted value.
              *
              * @alias measuresValueFormatFunction
              * @memberOf pvc.ext.DetTooltip#
              * @function
-             * @param {function} [_] The new value.
-             * @return {pvc.ext.DetTooltip|function} The property value, when getting, `this` instance, when setting.
+             *
+             * @param {function} [_] - The new value.
+             *
+             * @return {pvc.ext.DetTooltip|function} The property value, when getting; `this` instance, when setting.
              */
             formatter.measuresValueFormatFunction = function(_) {
                 if(arguments.length) {
@@ -336,7 +359,7 @@
         /**
          * Builds the tooltip model from the CCC scene information.
          *
-         * @param {Object} scene The CCC scene.
+         * @param {Object} scene - The CCC scene.
          *
          * @return {Object} The tooltip model.
          */
@@ -427,11 +450,11 @@
          * The default format function replaces tokens in the received format string
          * with values from the current tooltipModel subject (category, series, measure).
          *
-         * @param {Object} tooltipModel The tooltip model object (not used by the default formater).
-         * @param {Object} subject The current tooltip subject being formated.
-         * @param {string} formatString The format string.
+         * @param {Object} tooltipModel - The tooltip model object (not used by the default formatter).
+         * @param {Object} subject - The current tooltip subject being formatted.
+         * @param {string} formatString - The format string.
          *
-         * @return {string} The formated text.
+         * @return {string} The formatted text.
          */
         function defaultFormatFunction(tooltipModel, subject, formatString) {
             var matcher = /\{(.*?)\}/g;
@@ -463,9 +486,9 @@
 
         /**
          * The renderer method is called with a pre-built tooltip model object,
-         * and having the formater instance as `this` context.
+         * and having the formatter instance as `this` context.
          *
-         * @param {Object} tooltipModel The tooltip model object.
+         * @param {Object} tooltipModel - The tooltip model object.
          *
          * @return {string} The HTML of the rendered tooltip.
          */
