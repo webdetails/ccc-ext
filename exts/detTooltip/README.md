@@ -1,4 +1,4 @@
-# CategoricalTooltip Formatter
+# DetTooltip Formatter
 
 This CCC extension implements a rich HTML tooltip.
 

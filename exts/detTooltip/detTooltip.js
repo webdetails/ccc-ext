@@ -20,18 +20,18 @@
 
         /**
          * @class
-         * @name pvc.ext.CategoricalTooltip
+         * @name pvc.ext.DetTooltip
          *
          * @classdesc A rich HTML tooltip.
          *
          * To create an instance, use the factory function
-         * {@link pvc.ext.categoricalTooltip}.
+         * {@link pvc.ext.detTooltip}.
          *
          * ## Basic Usage
          * Include the extension's files:
          *
-         * 1. `categoricalTooltip.js`
-         * 2. `categoricalTooltip.css`
+         * 1. `detTooltip.js`
+         * 2. `detTooltip.css`
          *
          * (If using AMD/Require-JS, the "css" AMD plugin must be registered and
          * will automatically load the accompanying stylesheet).
@@ -40,7 +40,7 @@
          *
          * Then, within a CDF chart component's `preExecution` handler, write:
          * ```javascript
-         * pvc.ext.categoricalTooltip()
+         * pvc.ext.detTooltip()
          *      .install(this.chartDefinition);
          * ```
          *
@@ -49,23 +49,23 @@
          * #### Displaying values in percentage, fallback to value if not available
          *
          * ```javascript
-         * pvc.ext.categoricalTooltip()
+         * pvc.ext.detTooltip()
          *      .measuresValueFormatString("{value.percent.label|value.label}")
          *      .install(this.chartDefinition);
          * ```
          * ## Live examples
          *
-         * [Examples page](examples/exts/categoricalTooltip/examples.html).
+         * [Examples page](examples/exts/detTooltip/examples.html).
          */
 
         /**
          * Creates a rich HTML tooltip formatter.
-         * @alias categoricalTooltip
+         * @alias detTooltip
          * @memberOf pvc.ext
          * @function
-         * @return {pvc.ext.CategoricalTooltip} A new tooltip formatter.
+         * @return {pvc.ext.DetTooltip} A new tooltip formatter.
          */
-        function categoricalTooltip() {
+        function detTooltip() {
             var _categoryLabelFormatString = "{label}:&nbsp;{value.label}";
             var _categoryLabelFormatFunction = defaultFormatFunction;
 
@@ -85,7 +85,7 @@
                     tooltipEnabled:     true,
                     tooltipOpacity:     1,
                     tooltipGravity:     "s",
-                    tooltipClassName:   "ccc-ext-categorical-tooltip",
+                    tooltipClassName:   "ccc-ext-det-tooltip",
                     tooltipFollowMouse: true
                 });
 
@@ -105,17 +105,17 @@
              * * `tooltipEnabled` — `true`
              * * `tooltipOpacity` — `1`
              * * `tooltipGravity` — `"s"`
-             * * `tooltipClassName` — `"ccc-ext-categorical-tooltip"`
+             * * `tooltipClassName` — `"ccc-ext-det-tooltip"`
              * * `tooltipFollowMouse` — `true`
              *
              * This function sets the required properties `tooltipFormat` and `axisTooltipFormat`.
              *
-             * @name pvc.ext.CategoricalTooltip#install
+             * @name pvc.ext.DetTooltip#install
              * @function
              * @param {Object} cd The chart definition to extend.
              * @param {boolean} [defaults=false] Indicates that
              * only required or optional properties not present in the chart definition are set.
-             * @return {pvc.ext.CategoricalTooltip} This instance.
+             * @return {pvc.ext.DetTooltip} This instance.
              */
             formatter.install = formatter;
 
@@ -126,11 +126,11 @@
              * and will always exhibit the same behavior.
              *
              * Normally you would not use this function directly,
-             * as {@link pvc.ext.CategoricalTooltip#install}
+             * as {@link pvc.ext.DetTooltip#install}
              * sets this as the chart"s `tooltipFormat` for you.
              *
              * @alias format
-             * @memberOf pvc.ext.CategoricalTooltip#
+             * @memberOf pvc.ext.DetTooltip#
              * @function
              * @param {pvc.visual.Scene} scene The categorical scene for which to render the tooltip.
              * @return {string} The tooltip HTML string.
@@ -138,24 +138,24 @@
             formatter.format = function(scene) {
                 var model = buildModel.call(formatter, scene);
 
-                return categoricalTooltipRenderer.call(formatter, model);
+                return detTooltipRenderer.call(formatter, model);
             };
 
             /**
              * Formats an HTML tooltip for the current axis tick in the scene.
              *
              * Normally you would not use this function directly,
-             * as {@link pvc.ext.CategoricalTooltip#install}
+             * as {@link pvc.ext.DetTooltip#install}
              * sets this as the chart"s `axisTooltipFormat` for you.
              *
              * @alias axisTickLabelsFormat
-             * @memberOf pvc.ext.CategoricalTooltip#
+             * @memberOf pvc.ext.DetTooltip#
              * @function
              * @param {pvc.visual.Scene} scene The scene with the tick for which to render the tooltip.
              * @return {string} The tooltip HTML string.
              */
             formatter.axisTickLabelsFormat = function(scene) {
-                return this.pvMark.textAngle() || (this.pvMark.text() !== scene.vars.tick.label) ? categoricalTooltipRenderer.call(formatter, {axisTickLabels: scene.vars.tick.value.split("~")}) : "";
+                return this.pvMark.textAngle() || (this.pvMark.text() !== scene.vars.tick.label) ? detTooltipRenderer.call(formatter, {axisTickLabels: scene.vars.tick.value.split("~")}) : "";
             };
 
             /**
@@ -164,10 +164,10 @@
              * Defaults to "{label}:&nbsp;{value.label}".
              *
              * @alias categoryLabelFormatString
-             * @memberOf pvc.ext.CategoricalTooltip#
+             * @memberOf pvc.ext.DetTooltip#
              * @function
              * @param {string} [_] The new value.
-             * @return {pvc.ext.CategoricalTooltip|string} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.DetTooltip|string} The property value, when getting, `this` instance, when setting.
              */
             formatter.categoryLabelFormatString = function(_) {
                 if(arguments.length) {
@@ -187,10 +187,10 @@
              * current value of the categoryLabelFormatString property. Must return the formatted label.
              *
              * @alias categoryLabelFormatFunction
-             * @memberOf pvc.ext.CategoricalTooltip#
+             * @memberOf pvc.ext.DetTooltip#
              * @function
              * @param {function} [_] The new value.
-             * @return {pvc.ext.CategoricalTooltip|function} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.DetTooltip|function} The property value, when getting, `this` instance, when setting.
              */
             formatter.categoryLabelFormatFunction = function(_) {
                 if(arguments.length) {
@@ -207,10 +207,10 @@
              * Defaults to "{value.label}".
              *
              * @alias seriesLabelFormatString
-             * @memberOf pvc.ext.CategoricalTooltip#
+             * @memberOf pvc.ext.DetTooltip#
              * @function
              * @param {string} [_] The new value.
-             * @return {pvc.ext.CategoricalTooltip|string} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.DetTooltip|string} The property value, when getting, `this` instance, when setting.
              */
             formatter.seriesLabelFormatString = function(_) {
                 if(arguments.length) {
@@ -230,10 +230,10 @@
              * current value of the seriesLabelFormatString property. Must return the formatted label.
              *
              * @alias seriesLabelFormatFunction
-             * @memberOf pvc.ext.CategoricalTooltip#
+             * @memberOf pvc.ext.DetTooltip#
              * @function
              * @param {function} [_] The new value.
-             * @return {pvc.ext.CategoricalTooltip|function} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.DetTooltip|function} The property value, when getting, `this` instance, when setting.
              */
             formatter.seriesLabelFormatFunction = function(_) {
                 if(arguments.length) {
@@ -250,10 +250,10 @@
              * Defaults to "{label}".
              *
              * @alias measuresLabelFormatString
-             * @memberOf pvc.ext.CategoricalTooltip#
+             * @memberOf pvc.ext.DetTooltip#
              * @function
              * @param {string} [_] The new value.
-             * @return {pvc.ext.CategoricalTooltip|string} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.DetTooltip|string} The property value, when getting, `this` instance, when setting.
              */
             formatter.measuresLabelFormatString = function(_) {
                 if(arguments.length) {
@@ -273,10 +273,10 @@
              * current value of the measuresLabelFormatString property. Must return the formatted label.
              *
              * @alias measuresLabelFormatFunction
-             * @memberOf pvc.ext.CategoricalTooltip#
+             * @memberOf pvc.ext.DetTooltip#
              * @function
              * @param {function} [_] The new value.
-             * @return {pvc.ext.CategoricalTooltip|function} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.DetTooltip|function} The property value, when getting, `this` instance, when setting.
              */
             formatter.measuresLabelFormatFunction = function(_) {
                 if(arguments.length) {
@@ -293,10 +293,10 @@
              * Defaults to "{value}".
              *
              * @alias measuresValueFormatString
-             * @memberOf pvc.ext.CategoricalTooltip#
+             * @memberOf pvc.ext.DetTooltip#
              * @function
              * @param {string} [_] The new value.
-             * @return {pvc.ext.CategoricalTooltip|string} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.DetTooltip|string} The property value, when getting, `this` instance, when setting.
              */
             formatter.measuresValueFormatString = function(_) {
                 if(arguments.length) {
@@ -316,10 +316,10 @@
              * current value of the measuresValueFormatString property. Must return the formatted value.
              *
              * @alias measuresValueFormatFunction
-             * @memberOf pvc.ext.CategoricalTooltip#
+             * @memberOf pvc.ext.DetTooltip#
              * @function
              * @param {function} [_] The new value.
-             * @return {pvc.ext.CategoricalTooltip|function} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.DetTooltip|function} The property value, when getting, `this` instance, when setting.
              */
             formatter.measuresValueFormatFunction = function(_) {
                 if(arguments.length) {
@@ -469,7 +469,7 @@
          *
          * @return {string} The HTML of the rendered tooltip.
          */
-        function categoricalTooltipRenderer(tooltipModel) {
+        function detTooltipRenderer(tooltipModel) {
             var baseElement = document.createElement("div");
 
             if(tooltipModel.axisTickLabels) {
@@ -563,13 +563,13 @@
             return baseElement.innerHTML;
         }
 
-        (pvc.ext || (pvc.ext = {})).categoricalTooltip = categoricalTooltip;
+        (pvc.ext || (pvc.ext = {})).detTooltip = detTooltip;
 
-        return categoricalTooltip;
+        return detTooltip;
     }
 
     if(typeof define !== "undefined" && define.amd) {
-        define(["cdf/lib/CCC/def", "cdf/lib/CCC/pvc", "css!./categoricalTooltip.css"], moduleDef);
+        define(["cdf/lib/CCC/def", "cdf/lib/CCC/pvc", "css!./detTooltip.css"], moduleDef);
     } else if(typeof pvc !== "undefined") {
         moduleDef(def, pvc);
     }

@@ -1,17 +1,17 @@
 /* Override tipsy defaults */
-.ccc-ext-categorical-tooltip.tipsy
+.ccc-ext-det-tooltip.tipsy
 {
     margin: 0;
     padding: 0;
 }
 
-.ccc-ext-categorical-tooltip.tipsy .tipsy-arrow
+.ccc-ext-det-tooltip.tipsy .tipsy-arrow
 {
     display: none !important;
     visibility: hidden;
 }
 
-.ccc-ext-categorical-tooltip.tipsy .tipsy-inner
+.ccc-ext-det-tooltip.tipsy .tipsy-inner
 {
     max-width: none;
     margin: 0;
@@ -24,7 +24,7 @@
 }
 
 /* Tooltip styles */
-.ccc-ext-categorical-tooltip *
+.ccc-ext-det-tooltip *
 {
     font-family: 'open sans' sans;
     font-size: 10px;
@@ -35,13 +35,13 @@
     color: #666;
 }
 
-.ccc-ext-categorical-tooltip .tipsy-inner
+.ccc-ext-det-tooltip .tipsy-inner
 {
     border: solid 1px #f2f2f2;
     box-shadow: 0 0 4px 0 rgba(0,0,0,.4);
 }
 
-.ccc-ext-categorical-tooltip h1
+.ccc-ext-det-tooltip h1
 {
     line-height: 2.2em;
 
@@ -53,7 +53,7 @@
     border-bottom: solid 1px #f2f2f2;
 }
 
-.ccc-ext-categorical-tooltip .series
+.ccc-ext-det-tooltip .series
 {
     line-height: 1.6em;
 
@@ -70,7 +70,7 @@
     flex-wrap: nowrap;
 }
 
-.ccc-ext-categorical-tooltip .series .color
+.ccc-ext-det-tooltip .series .color
 {
     width: .8em;
     height: .8em;
@@ -82,7 +82,7 @@
     flex-basis: .8em;
 }
 
-.ccc-ext-categorical-tooltip .series h2
+.ccc-ext-det-tooltip .series h2
 {
     overflow: hidden;
 
@@ -96,7 +96,7 @@
     flex-grow: 1;
 }
 
-.ccc-ext-categorical-tooltip .series span
+.ccc-ext-det-tooltip .series span
 {
     font-size: 15px;
 
@@ -108,7 +108,7 @@
     flex-shrink: 1;
 }
 
-.ccc-ext-categorical-tooltip .measures-container
+.ccc-ext-det-tooltip .measures-container
 {
     position: relative;
 
@@ -120,7 +120,7 @@
     border-top: solid 1px #f2f2f2;
 }
 
-.ccc-ext-categorical-tooltip .measures-container .measure
+.ccc-ext-det-tooltip .measures-container .measure
 {
     line-height: 1.6em;
 
@@ -137,7 +137,7 @@
     flex-wrap: nowrap;
 }
 
-.ccc-ext-categorical-tooltip .measures-container .measure h3
+.ccc-ext-det-tooltip .measures-container .measure h3
 {
     overflow: hidden;
 
@@ -151,7 +151,7 @@
     flex-grow: 1;
 }
 
-.ccc-ext-categorical-tooltip .measures-container .measure span
+.ccc-ext-det-tooltip .measures-container .measure span
 {
     font-size: 15px;
 
@@ -163,7 +163,7 @@
     flex-shrink: 1;
 }
 
-.ccc-ext-categorical-tooltip .axis-tick-label-container
+.ccc-ext-det-tooltip .axis-tick-label-container
 {
     position: relative;
 
@@ -173,7 +173,7 @@
     list-style: none;
 }
 
-.ccc-ext-categorical-tooltip .axis-tick-label-container .axis-tick-label
+.ccc-ext-det-tooltip .axis-tick-label-container .axis-tick-label
 {
     line-height: 1.6em;
 
@@ -190,7 +190,7 @@
     flex-wrap: nowrap;
 }
 
-.ccc-ext-categorical-tooltip .axis-tick-label-container .axis-tick-label h1
+.ccc-ext-det-tooltip .axis-tick-label-container .axis-tick-label h1
 {
     overflow: hidden;
 

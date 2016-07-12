@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<title>CategoricalTooltip</title>
+<title>DetTooltip</title>
 <link type="text/css" href="../../lib/example.css" rel="stylesheet" />
 <script type="text/javascript" src="../../lib/require.js"></script>
 <script type="text/javascript" src="../../lib/require.config.js"></script>
@@ -12,7 +12,7 @@
 <!-- Example 1 -->
 <div class="example">
     <div class="code">
-        <pre>pvc.ext.categoricalTooltip().install(cd);</pre>
+        <pre>pvc.ext.detTooltip().install(cd);</pre>
     </div>
     <div id="example1"></div>
 </div>
@@ -20,7 +20,7 @@
 <!-- Example 2 -->
 <div class="example">
     <div class="code">
-        <pre>pvc.ext.categoricalTooltip().install(cd);</pre>
+        <pre>pvc.ext.detTooltip().install(cd);</pre>
     </div>
     <div id="example2"></div>
 </div>
@@ -28,12 +28,12 @@
 <!-- Example 3 -->
 <div class="example">
     <div class="code">
-        <pre>pvc.ext.categoricalTooltip().install(cd);</pre>
+        <pre>pvc.ext.detTooltip().install(cd);</pre>
     </div>
     <div id="example3"></div>
 </div>
 <script>
-require(['cdf/lib/CCC/pvc', 'data', './categoricalTooltip'], function(pvc, data) {
+require(['cdf/lib/CCC/pvc', 'data', './detTooltip'], function(pvc, data) {
     var cd;
 
     // ---------
@@ -50,7 +50,7 @@ require(['cdf/lib/CCC/pvc', 'data', './categoricalTooltip'], function(pvc, data)
         stacked:    true
     };
 
-    pvc.ext.categoricalTooltip().install(cd);
+    pvc.ext.detTooltip().install(cd);
 
     new pvc.BarChart(cd)
         .setData(data.relational_01_neg, {crosstabMode: false})
@@ -70,7 +70,7 @@ require(['cdf/lib/CCC/pvc', 'data', './categoricalTooltip'], function(pvc, data)
         stacked:    true
     };
 
-    pvc.ext.categoricalTooltip()
+    pvc.ext.detTooltip()
         (cd);
 
     new pvc.LineChart(cd)
@@ -91,7 +91,7 @@ require(['cdf/lib/CCC/pvc', 'data', './categoricalTooltip'], function(pvc, data)
         stacked:    true
     };
 
-    pvc.ext.categoricalTooltip()
+    pvc.ext.detTooltip()
         (cd);
 
     new pvc.LineChart(cd)
