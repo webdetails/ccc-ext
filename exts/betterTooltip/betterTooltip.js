@@ -91,6 +91,7 @@
 
                 // Required
                 cd.tooltipFormat = formatter.format;
+                cd.axisTooltipFormat = formatter.axisTickLabelsFormat;
                 return cd;
             }
 
@@ -107,7 +108,7 @@
              * * `tooltipClassName` — `"ccc-ext-better-tooltip"`
              * * `tooltipFollowMouse` — `true`
              *
-             * This function sets the required property: `tooltipFormat`.
+             * This function sets the required properties `tooltipFormat` and `axisTooltipFormat`.
              *
              * @name pvc.ext.BetterTooltip#install
              * @function
@@ -138,6 +139,23 @@
                 var model = buildModel.call(formatter, scene);
 
                 return betterTooltipRenderer.call(formatter, model);
+            };
+
+            /**
+             * Formats an HTML tooltip for the current axis tick in the scene.
+             *
+             * Normally you would not use this function directly,
+             * as {@link pvc.ext.BetterTooltip#install}
+             * sets this as the chart"s `axisTooltipFormat` for you.
+             *
+             * @alias axisTickLabelsFormat
+             * @memberOf pvc.ext.BetterTooltip#
+             * @function
+             * @param {pvc.visual.Scene} scene The scene with the tick for which to render the tooltip.
+             * @return {string} The tooltip HTML string.
+             */
+            formatter.axisTickLabelsFormat = function(scene) {
+                return this.pvMark.textAngle() || (this.pvMark.text() !== scene.vars.tick.label) ? betterTooltipRenderer.call(formatter, {axisTickLabels: scene.vars.tick.value.split("~")}) : "";
             };
 
             /**
@@ -389,17 +407,19 @@
                         value: seriesValue,
                         label: scene.getSeriesLabel()
                     };
-                } else {
+                } else if(tooltipModels.measures.length > 0) {
                     var firstMeasure = tooltipModels.measures[0]
                     value = {value: firstMeasure.value, label: ""};
 
                     if(tooltipModels.category && (!series || tooltipModels.measures.length > 1)) {
                         value.label = tooltipModels.category.value.label;
                         tooltipModels.category = null;
-                    } else value.label = firstMeasure.label;
+                    } else {
+                        value.label = firstMeasure.label;
+                    }
                 }
 
-                return {color: color, value: value, label: (series && series.label) || ""};
+                return value ? {color: color, value: value, label: (series && series.label) || ""} : null;
             }
         }
 
@@ -452,6 +472,25 @@
         function betterTooltipRenderer(tooltipModel) {
             var baseElement = document.createElement("div");
 
+            if(tooltipModel.axisTickLabels) {
+                var axisTickLabelsElement = document.createElement("ul");
+                axisTickLabelsElement.className = "axis-tick-label-container";
+
+                tooltipModel.axisTickLabels.forEach(function(axisTickLabel) {
+                    var axisLabelElement = document.createElement("li");
+                    axisLabelElement.className = "axis-tick-label";
+
+                    var labelElement = document.createElement("h1");
+                    labelElement.innerHTML = axisTickLabel;
+
+                    axisLabelElement.appendChild(labelElement);
+
+                    axisTickLabelsElement.appendChild(axisLabelElement);
+                }, this);
+
+                baseElement.appendChild(axisTickLabelsElement);
+            }
+
             if(tooltipModel.category) {
                 var titleElement = document.createElement("h1");
                 titleElement.innerHTML = defaultFormatFunction(tooltipModel, tooltipModel.category, this.categoryLabelFormatString());
@@ -459,12 +498,12 @@
                 baseElement.appendChild(titleElement);
             }
 
-            var seriesElement = document.createElement("div");
-            seriesElement.className = "series";
-
-            var labelElement = document.createElement("h2");
-
             if(tooltipModel.series != null) {
+                var seriesElement = document.createElement("div");
+                seriesElement.className = "series";
+
+                var labelElement = document.createElement("h2");
+
                 if(tooltipModel.series.color != null) {
                     var colorElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
                     colorElement.style.fill = tooltipModel.series.color;
@@ -483,41 +522,41 @@
 
                 labelElement.innerHTML = defaultFormatFunction(tooltipModel, tooltipModel.series, this.seriesLabelFormatString());
                 seriesElement.appendChild(labelElement);
-            }
 
-            baseElement.appendChild(seriesElement);
+                baseElement.appendChild(seriesElement);
 
-            if(tooltipModel.measures) {
-                if(tooltipModel.measures.length === 1) {
-                    var measure = tooltipModel.measures[0];
-                    var valueElement = document.createElement("span");
-                    valueElement.innerHTML = defaultFormatFunction(tooltipModel, measure, this.measuresValueFormatString());
+                if(tooltipModel.measures) {
+                    if(tooltipModel.measures.length === 1) {
+                        var measure = tooltipModel.measures[0];
+                        var valueElement = document.createElement("span");
+                        valueElement.innerHTML = defaultFormatFunction(tooltipModel, measure, this.measuresValueFormatString());
 
-                    seriesElement.appendChild(valueElement);
-                } else {
-                    var measuresElement = document.createElement("ul");
-                    measuresElement.className = "measures-container";
+                        seriesElement.appendChild(valueElement);
+                    } else {
+                        var measuresElement = document.createElement("ul");
+                        measuresElement.className = "measures-container";
 
-                    tooltipModel.measures.forEach(function(measure) {
-                        var measureElement = document.createElement("li");
-                        measureElement.className = "measure";
+                        tooltipModel.measures.forEach(function(measure) {
+                            var measureElement = document.createElement("li");
+                            measureElement.className = "measure";
 
-                        var labelElement = document.createElement("h3");
-                        labelElement.innerHTML = defaultFormatFunction(tooltipModel, measure, this.measuresLabelFormatString());
+                            var labelElement = document.createElement("h3");
+                            labelElement.innerHTML = defaultFormatFunction(tooltipModel, measure, this.measuresLabelFormatString());
 
-                        measureElement.appendChild(labelElement);
+                            measureElement.appendChild(labelElement);
 
-                        if(measure.value != null) {
-                            var valueElement = document.createElement("span");
-                            valueElement.innerHTML = defaultFormatFunction(tooltipModel, measure, this.measuresValueFormatString());
+                            if(measure.value != null) {
+                                var valueElement = document.createElement("span");
+                                valueElement.innerHTML = defaultFormatFunction(tooltipModel, measure, this.measuresValueFormatString());
 
-                            measureElement.appendChild(valueElement);
-                        }
+                                measureElement.appendChild(valueElement);
+                            }
 
-                        measuresElement.appendChild(measureElement);
-                    }, this);
+                            measuresElement.appendChild(measureElement);
+                        }, this);
 
-                    baseElement.appendChild(measuresElement);
+                        baseElement.appendChild(measuresElement);
+                    }
                 }
             }
 

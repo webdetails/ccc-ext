@@ -163,6 +163,45 @@
     flex-shrink: 1;
 }
 
-/*
-  background-color: #eae8e6;
-*/
+.ccc-ext-better-tooltip .axis-tick-label-container
+{
+    position: relative;
+
+    margin: 0;
+    padding: .5em 1em;
+
+    list-style: none;
+}
+
+.ccc-ext-better-tooltip .axis-tick-label-container .axis-tick-label
+{
+    line-height: 1.6em;
+
+    display: flex;
+    flex-direction: row;
+
+    min-height: 1.6em;
+    margin: 0;
+    padding: .5em 0;
+
+    flex: 1;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+}
+
+.ccc-ext-better-tooltip .axis-tick-label-container .axis-tick-label h1
+{
+    overflow: hidden;
+
+    border: 0;
+
+    max-width: 27.5em;
+    max-height: 4.8em;
+    margin: 0;
+    padding: 0;
+
+    text-align: left;
+
+    flex-grow: 1;
+}
