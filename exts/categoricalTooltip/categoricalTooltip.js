@@ -20,18 +20,18 @@
 
         /**
          * @class
-         * @name pvc.ext.BetterTooltip
+         * @name pvc.ext.CategoricalTooltip
          *
          * @classdesc A rich HTML tooltip.
          *
          * To create an instance, use the factory function
-         * {@link pvc.ext.betterTooltip}.
+         * {@link pvc.ext.categoricalTooltip}.
          *
          * ## Basic Usage
          * Include the extension's files:
          *
-         * 1. `betterTooltip.js`
-         * 2. `betterTooltip.css`
+         * 1. `categoricalTooltip.js`
+         * 2. `categoricalTooltip.css`
          *
          * (If using AMD/Require-JS, the "css" AMD plugin must be registered and
          * will automatically load the accompanying stylesheet).
@@ -40,7 +40,7 @@
          *
          * Then, within a CDF chart component's `preExecution` handler, write:
          * ```javascript
-         * pvc.ext.betterTooltip()
+         * pvc.ext.categoricalTooltip()
          *      .install(this.chartDefinition);
          * ```
          *
@@ -49,23 +49,23 @@
          * #### Displaying values in percentage, fallback to value if not available
          *
          * ```javascript
-         * pvc.ext.betterTooltip()
+         * pvc.ext.categoricalTooltip()
          *      .measuresValueFormatString("{value.percent.label|value.label}")
          *      .install(this.chartDefinition);
          * ```
          * ## Live examples
          *
-         * [Examples page](examples/exts/betterTooltip/examples.html).
+         * [Examples page](examples/exts/categoricalTooltip/examples.html).
          */
 
         /**
          * Creates a rich HTML tooltip formatter.
-         * @alias betterTooltip
+         * @alias categoricalTooltip
          * @memberOf pvc.ext
          * @function
-         * @return {pvc.ext.BetterTooltip} A new tooltip formatter.
+         * @return {pvc.ext.CategoricalTooltip} A new tooltip formatter.
          */
-        function betterTooltip() {
+        function categoricalTooltip() {
             var _categoryLabelFormatString = "{label}:&nbsp;{value.label}";
             var _categoryLabelFormatFunction = defaultFormatFunction;
 
@@ -85,7 +85,7 @@
                     tooltipEnabled:     true,
                     tooltipOpacity:     1,
                     tooltipGravity:     "s",
-                    tooltipClassName:   "ccc-ext-better-tooltip",
+                    tooltipClassName:   "ccc-ext-categorical-tooltip",
                     tooltipFollowMouse: true
                 });
 
@@ -105,17 +105,17 @@
              * * `tooltipEnabled` — `true`
              * * `tooltipOpacity` — `1`
              * * `tooltipGravity` — `"s"`
-             * * `tooltipClassName` — `"ccc-ext-better-tooltip"`
+             * * `tooltipClassName` — `"ccc-ext-categorical-tooltip"`
              * * `tooltipFollowMouse` — `true`
              *
              * This function sets the required properties `tooltipFormat` and `axisTooltipFormat`.
              *
-             * @name pvc.ext.BetterTooltip#install
+             * @name pvc.ext.CategoricalTooltip#install
              * @function
              * @param {Object} cd The chart definition to extend.
              * @param {boolean} [defaults=false] Indicates that
              * only required or optional properties not present in the chart definition are set.
-             * @return {pvc.ext.BetterTooltip} This instance.
+             * @return {pvc.ext.CategoricalTooltip} This instance.
              */
             formatter.install = formatter;
 
@@ -126,11 +126,11 @@
              * and will always exhibit the same behavior.
              *
              * Normally you would not use this function directly,
-             * as {@link pvc.ext.BetterTooltip#install}
+             * as {@link pvc.ext.CategoricalTooltip#install}
              * sets this as the chart"s `tooltipFormat` for you.
              *
              * @alias format
-             * @memberOf pvc.ext.BetterTooltip#
+             * @memberOf pvc.ext.CategoricalTooltip#
              * @function
              * @param {pvc.visual.Scene} scene The categorical scene for which to render the tooltip.
              * @return {string} The tooltip HTML string.
@@ -138,24 +138,24 @@
             formatter.format = function(scene) {
                 var model = buildModel.call(formatter, scene);
 
-                return betterTooltipRenderer.call(formatter, model);
+                return categoricalTooltipRenderer.call(formatter, model);
             };
 
             /**
              * Formats an HTML tooltip for the current axis tick in the scene.
              *
              * Normally you would not use this function directly,
-             * as {@link pvc.ext.BetterTooltip#install}
+             * as {@link pvc.ext.CategoricalTooltip#install}
              * sets this as the chart"s `axisTooltipFormat` for you.
              *
              * @alias axisTickLabelsFormat
-             * @memberOf pvc.ext.BetterTooltip#
+             * @memberOf pvc.ext.CategoricalTooltip#
              * @function
              * @param {pvc.visual.Scene} scene The scene with the tick for which to render the tooltip.
              * @return {string} The tooltip HTML string.
              */
             formatter.axisTickLabelsFormat = function(scene) {
-                return this.pvMark.textAngle() || (this.pvMark.text() !== scene.vars.tick.label) ? betterTooltipRenderer.call(formatter, {axisTickLabels: scene.vars.tick.value.split("~")}) : "";
+                return this.pvMark.textAngle() || (this.pvMark.text() !== scene.vars.tick.label) ? categoricalTooltipRenderer.call(formatter, {axisTickLabels: scene.vars.tick.value.split("~")}) : "";
             };
 
             /**
@@ -164,10 +164,10 @@
              * Defaults to "{label}:&nbsp;{value.label}".
              *
              * @alias categoryLabelFormatString
-             * @memberOf pvc.ext.BetterTooltip#
+             * @memberOf pvc.ext.CategoricalTooltip#
              * @function
              * @param {string} [_] The new value.
-             * @return {pvc.ext.BetterTooltip|string} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.CategoricalTooltip|string} The property value, when getting, `this` instance, when setting.
              */
             formatter.categoryLabelFormatString = function(_) {
                 if(arguments.length) {
@@ -187,10 +187,10 @@
              * current value of the categoryLabelFormatString property. Must return the formatted label.
              *
              * @alias categoryLabelFormatFunction
-             * @memberOf pvc.ext.BetterTooltip#
+             * @memberOf pvc.ext.CategoricalTooltip#
              * @function
              * @param {function} [_] The new value.
-             * @return {pvc.ext.BetterTooltip|function} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.CategoricalTooltip|function} The property value, when getting, `this` instance, when setting.
              */
             formatter.categoryLabelFormatFunction = function(_) {
                 if(arguments.length) {
@@ -207,10 +207,10 @@
              * Defaults to "{value.label}".
              *
              * @alias seriesLabelFormatString
-             * @memberOf pvc.ext.BetterTooltip#
+             * @memberOf pvc.ext.CategoricalTooltip#
              * @function
              * @param {string} [_] The new value.
-             * @return {pvc.ext.BetterTooltip|string} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.CategoricalTooltip|string} The property value, when getting, `this` instance, when setting.
              */
             formatter.seriesLabelFormatString = function(_) {
                 if(arguments.length) {
@@ -230,10 +230,10 @@
              * current value of the seriesLabelFormatString property. Must return the formatted label.
              *
              * @alias seriesLabelFormatFunction
-             * @memberOf pvc.ext.BetterTooltip#
+             * @memberOf pvc.ext.CategoricalTooltip#
              * @function
              * @param {function} [_] The new value.
-             * @return {pvc.ext.BetterTooltip|function} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.CategoricalTooltip|function} The property value, when getting, `this` instance, when setting.
              */
             formatter.seriesLabelFormatFunction = function(_) {
                 if(arguments.length) {
@@ -250,10 +250,10 @@
              * Defaults to "{label}".
              *
              * @alias measuresLabelFormatString
-             * @memberOf pvc.ext.BetterTooltip#
+             * @memberOf pvc.ext.CategoricalTooltip#
              * @function
              * @param {string} [_] The new value.
-             * @return {pvc.ext.BetterTooltip|string} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.CategoricalTooltip|string} The property value, when getting, `this` instance, when setting.
              */
             formatter.measuresLabelFormatString = function(_) {
                 if(arguments.length) {
@@ -273,10 +273,10 @@
              * current value of the measuresLabelFormatString property. Must return the formatted label.
              *
              * @alias measuresLabelFormatFunction
-             * @memberOf pvc.ext.BetterTooltip#
+             * @memberOf pvc.ext.CategoricalTooltip#
              * @function
              * @param {function} [_] The new value.
-             * @return {pvc.ext.BetterTooltip|function} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.CategoricalTooltip|function} The property value, when getting, `this` instance, when setting.
              */
             formatter.measuresLabelFormatFunction = function(_) {
                 if(arguments.length) {
@@ -293,10 +293,10 @@
              * Defaults to "{value}".
              *
              * @alias measuresValueFormatString
-             * @memberOf pvc.ext.BetterTooltip#
+             * @memberOf pvc.ext.CategoricalTooltip#
              * @function
              * @param {string} [_] The new value.
-             * @return {pvc.ext.BetterTooltip|string} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.CategoricalTooltip|string} The property value, when getting, `this` instance, when setting.
              */
             formatter.measuresValueFormatString = function(_) {
                 if(arguments.length) {
@@ -316,10 +316,10 @@
              * current value of the measuresValueFormatString property. Must return the formatted value.
              *
              * @alias measuresValueFormatFunction
-             * @memberOf pvc.ext.BetterTooltip#
+             * @memberOf pvc.ext.CategoricalTooltip#
              * @function
              * @param {function} [_] The new value.
-             * @return {pvc.ext.BetterTooltip|function} The property value, when getting, `this` instance, when setting.
+             * @return {pvc.ext.CategoricalTooltip|function} The property value, when getting, `this` instance, when setting.
              */
             formatter.measuresValueFormatFunction = function(_) {
                 if(arguments.length) {
@@ -469,7 +469,7 @@
          *
          * @return {string} The HTML of the rendered tooltip.
          */
-        function betterTooltipRenderer(tooltipModel) {
+        function categoricalTooltipRenderer(tooltipModel) {
             var baseElement = document.createElement("div");
 
             if(tooltipModel.axisTickLabels) {
@@ -563,13 +563,13 @@
             return baseElement.innerHTML;
         }
 
-        (pvc.ext || (pvc.ext = {})).betterTooltip = betterTooltip;
+        (pvc.ext || (pvc.ext = {})).categoricalTooltip = categoricalTooltip;
 
-        return betterTooltip;
+        return categoricalTooltip;
     }
 
     if(typeof define !== "undefined" && define.amd) {
-        define(["cdf/lib/CCC/def", "cdf/lib/CCC/pvc", "css!./betterTooltip.css"], moduleDef);
+        define(["cdf/lib/CCC/def", "cdf/lib/CCC/pvc", "css!./categoricalTooltip.css"], moduleDef);
     } else if(typeof pvc !== "undefined") {
         moduleDef(def, pvc);
     }
