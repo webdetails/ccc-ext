@@ -107,8 +107,9 @@
              * Extend the default mapping if available, with one specified in
              * {@link pvc.ext.DetTooltip#plotMappings}.
              *
-             * @param {pvc.visual.Plot} plot The chart plot.
-             * @returns {Object} The visual role mapping.
+             * @param {pvc.visual.Plot} plot - The chart plot.
+             *
+             * @return {Object} The visual role mapping.
              */
             function getPlotMapping(plot) {
               var defaultMapping = getPlotDefaultMapping(plot);
@@ -178,7 +179,7 @@
              * @alias plotMappings
              * @memberOf pvc.ext.DetTooltip#
              * @function
-             * @param {Object} [_] The new value.
+             * @param {Object} [_] - The new value.
              * @return {pvc.ext.DetTooltip|Object} The property value, when getting, `this` instance, when setting.
              */
             formatter.plotMappings = function(_) {
@@ -497,8 +498,9 @@
          * Gets the default mapping for {@link pvc.visual.CategoricalPlot},
          * {@link pvc.visual.PiePlot} or {@link pvc.visual.MetricPointPlot}.
          *
-         * @param {pvc.visual.Plot} plot The chart plot.
-         * @returns {Object} The default visual role mapping.
+         * @param {pvc.visual.Plot} plot - The chart plot.
+         *
+         * @return {Object} The default visual role mapping.
          */
         function getPlotDefaultMapping(plot) {
             if(plot instanceof pvc.visual.CategoricalPlot)
@@ -532,8 +534,8 @@
         /**
          * Builds the tooltip model from the CCC scene information.
          *
-         * @param {Object} scene The CCC scene.
-         * @param {Object} mapping Map of visual roles for current plot type
+         * @param {Object} scene - The CCC scene.
+         * @param {Object} mapping - Map of visual roles for current plot type
          *
          * @return {Object} The tooltip model.
          */
@@ -600,18 +602,41 @@
             return tooltipModel;
         }
 
+        /**
+         * Gets the item value in a given scene var.
+         *
+         * @param {Object} scene - The CCC scene.
+         * @param {string} varName - The scene var name.
+         *
+         * @return {?Object} The item value.
+         */
         function getVarItem(scene, varName) {
             var item = scene.vars[varName];
 
             return item && item.value != null ? item : null;
         }
 
+        /**
+         * Gets the color scale value of the CCC scene.
+         *
+         * @param {Object} scene - The CCC scene.
+         *
+         * @return {string} The color scale value.
+         */
         function getColorScaleValue(scene) {
             var rootColor = scene.root.panel().axes.color;
 
             return rootColor.sceneScale({sceneVarName: 'color'})(scene).color;
         }
 
+        /**
+         * Fallback to support scatter chart not having a category mapped
+         *
+         * @param {Object} scene - The CCC scene.
+         * @param {string} varName - The scene var name.
+         *
+         * @return {*}
+         */
         function noBoundCategory(scene, varName) {
             var rootData = scene.chart().data.root;
             var datum    = scene.datum;
@@ -633,6 +658,15 @@
             return null;
         }
 
+        /**
+         * Builds the composite label of a given visual role, taking into account
+         * all its dimensions.
+         *
+         * @param {Object} complexType - The root data type object.
+         * @param {Object} visualRole - A chart visual role.
+         *
+         * @return {string} The composite label.
+         */
         function buildCompositeLabel(complexType, visualRole) {
             return visualRole.grouping.dimensionNames().map(function(dimName) {
                 return complexType.dimensions(dimName).label;
@@ -748,6 +782,13 @@
             return baseElement.innerHTML;
         }
 
+        /**
+         * The renderer method is called to render a color mark in the given html element,
+         * when a visual role has a color associated with it.
+         *
+         * @param {Element} parentElement - Visual role html element where to place the color mark.
+         * @param {Object} roleInfo - The visual role information.
+         */
         function renderColorMark(parentElement, roleInfo) {
             if(roleInfo.color) {
                 var colorElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -765,6 +806,13 @@
             }
         }
 
+        /**
+         * The renderer method is called to try to render the value of a measure
+         * in the given html element.
+         *
+         * @param {Element} parentElement - Measure html element where to place the color mark.
+         * @param {Object} roleInfo - The measure information.
+         */
         function renderMeasureValue(parentElement, roleInfo) {
             if(roleInfo.item != null) {
                 var valueElement = document.createElement("span");
