@@ -78,6 +78,9 @@
             var _measuresValueFormatString = "{value.label}";
             var _measuresValueFormatFunction = defaultFormatFunction;
 
+            var _groupLabelFormatString = "{label}";
+            var _groupLabelFormatFunction = defaultFormatFunction;
+
             function formatter(cd, defaults) {
                 // Optional
                 var copy = (defaults ? def.setUDefaults : def.copyOwn);
@@ -92,6 +95,7 @@
                 // Required
                 cd.tooltipFormat = formatter.format;
                 cd.axisTooltipFormat = formatter.axisTickLabelsFormat;
+                cd.legendLabel_tooltip = formatter.legendLabelsFormat;
                 return cd;
             }
 
@@ -157,12 +161,33 @@
              * @memberOf pvc.ext.DetTooltip#
              * @function
              *
-             * @param {pvc.visual.Scene} scene - The scene with the tick for which to render the tooltip.
+             * @param {pvc.visual.Scene} scene - The scene of the tick for which to render the tooltip.
              *
              * @return {string} The tooltip HTML string.
              */
             formatter.axisTickLabelsFormat = function(scene) {
-                return this.pvMark.textAngle() || (this.pvMark.text() !== scene.vars.tick.label) ? detTooltipRenderer.call(formatter, {axisTickLabels: scene.vars.tick.value.split("~")}) : "";
+                return this.pvMark.textAngle() || (this.pvMark.text() !== scene.vars.tick.label) ? detTooltipRenderer.call(formatter, {groups: scene.groups}) : "";
+            };
+
+            /**
+             * Formats an HTML tooltip for a legend item.
+             *
+             * Normally you would not use this function directly,
+             * as {@link pvc.ext.DetTooltip#install}
+             * sets this as the chart"s `legendLabel_tooltip` for you.
+             *
+             * @alias legendLabelsFormat
+             * @memberOf pvc.ext.DetTooltip#
+             * @function
+             *
+             * @param {pvc.visual.Scene} scene - The scene of the legend label for which to render the tooltip.
+             *
+             * @return {string} The tooltip HTML string.
+             */
+            formatter.legendLabelsFormat = function(scene) {
+                var valueText = scene.vars.value.absLabel || scene.vars.value.label;
+
+                return (this.pvMark.text() !== valueText) ? detTooltipRenderer.call(formatter, {groups: scene.groups}) : "";
             };
 
             /**
@@ -353,6 +378,53 @@
                 return _measuresValueFormatFunction;
             };
 
+            /**
+             * Gets or sets the format string for a group. Used by the default label formatter.
+             *
+             * Defaults to "{label}".
+             *
+             * @alias groupLabelFormatString
+             * @memberOf pvc.ext.DetTooltip#
+             * @function
+             *
+             * @param {string} [_] - The new value.
+             *
+             * @return {pvc.ext.DetTooltip|string} The property value, when getting; `this` instance, when setting.
+             */
+            formatter.groupLabelFormatString = function(_) {
+                if(arguments.length) {
+                    _groupLabelFormatString = _;
+                    return formatter;
+                }
+
+                return _groupLabelFormatString;
+            };
+
+            /**
+             * Gets or sets the format function for a group.
+             *
+             * The default format function uses the categoryLabelFormatString property for creating the label.
+             *
+             * Custom formatters receive the full tooltip model object, the category being formatted and the
+             * current value of the categoryLabelFormatString property. Must return the formatted label.
+             *
+             * @alias groupLabelFormatFunction
+             * @memberOf pvc.ext.DetTooltip#
+             * @function
+             *
+             * @param {function} [_] - The new value.
+             *
+             * @return {pvc.ext.DetTooltip|function} The property value, when getting; `this` instance, when setting.
+             */
+            formatter.groupLabelFormatFunction = function(_) {
+                if(arguments.length) {
+                    _groupLabelFormatFunction = _;
+                    return formatter;
+                }
+
+                return _groupLabelFormatFunction;
+            };
+
             return formatter;
         }
 
@@ -495,16 +567,16 @@
         function detTooltipRenderer(tooltipModel) {
             var baseElement = document.createElement("div");
 
-            if(tooltipModel.axisTickLabels) {
+            if(tooltipModel.groups) {
                 var axisTickLabelsElement = document.createElement("ul");
                 axisTickLabelsElement.className = "axis-tick-label-container";
 
-                tooltipModel.axisTickLabels.forEach(function(axisTickLabel) {
+                tooltipModel.groups.forEach(function(group) {
                     var axisLabelElement = document.createElement("li");
-                    axisLabelElement.className = "axis-tick-label";
+                    axisLabelElement.className = "group-label";
 
                     var labelElement = document.createElement("h1");
-                    labelElement.innerHTML = axisTickLabel;
+                    labelElement.innerHTML = defaultFormatFunction(tooltipModel, group, this.groupLabelFormatString());
 
                     axisLabelElement.appendChild(labelElement);
 
