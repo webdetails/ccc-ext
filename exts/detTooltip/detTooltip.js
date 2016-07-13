@@ -494,7 +494,7 @@
 
                 var rootColor   = scene.root.panel().axes.color;
                 var colorVar    = scene.vars.color;
-                var color       = rootColor.isDiscrete() && colorVar ? rootColor.scale(colorVar).color : null;
+                var color       = rootColor.isDiscrete() && colorVar ? rootColor.scale(colorVar).color : rootColor.sceneScale({sceneVarName: 'color'})(scene).color;
 
                 var value;
                 if(seriesValue != null) {
