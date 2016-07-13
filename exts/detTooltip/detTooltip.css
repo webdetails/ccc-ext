@@ -223,7 +223,7 @@
           flex-shrink: 1;
 }
 
-.ccc-ext-det-tooltip .axis-tick-label-container {
+.ccc-ext-det-tooltip .group-container {
   position: relative;
 
   margin: 0;
@@ -232,7 +232,7 @@
   list-style: none;
 }
 
-.ccc-ext-det-tooltip .axis-tick-label-container .axis-tick-label {
+.ccc-ext-det-tooltip .group-container .group-label {
   line-height: 1.6em;
 
   display: -webkit-flex;
@@ -270,7 +270,7 @@
           flex-wrap: nowrap;
 }
 
-.ccc-ext-det-tooltip .axis-tick-label-container .axis-tick-label h1 {
+.ccc-ext-det-tooltip .group-container .group-label h1 {
   overflow: hidden;
 
   max-height: 4.8em;

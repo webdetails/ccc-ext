@@ -569,7 +569,7 @@
 
             if(tooltipModel.groups) {
                 var axisTickLabelsElement = document.createElement("ul");
-                axisTickLabelsElement.className = "axis-tick-label-container";
+                axisTickLabelsElement.className = "group-container";
 
                 tooltipModel.groups.forEach(function(group) {
                     var axisLabelElement = document.createElement("li");
