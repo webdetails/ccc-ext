@@ -17,7 +17,6 @@
     /*global define:true, pvc:true, def:true */
 
     function moduleDef(def, pvc) {
-
         /**
          * @class
          * @name pvc.ext.DetTooltip
@@ -49,8 +48,9 @@
          * #### Displaying values in percentage, fallback to value if not available
          *
          * ```javascript
+
          * pvc.ext.detTooltip()
-         *      .measuresValueFormatString("{value.percent.label|value.label}")
+         *      .measuresValueFormatString("{item.percent.label|item.label}")
          *      .install(this.chartDefinition);
          * ```
          * ## Live examples
@@ -66,16 +66,18 @@
          * @return {pvc.ext.DetTooltip} A new tooltip formatter.
          */
         function detTooltip() {
-            var _categoryLabelFormatString = "{label}:&nbsp;{value.label}";
+            var _mappingByPlot = null;
+
+            var _categoryLabelFormatString = "{caption}:&nbsp;{item.label}";
             var _categoryLabelFormatFunction = defaultFormatFunction;
 
-            var _seriesLabelFormatString = "{value.label}";
+            var _seriesLabelFormatString = "{item.label}";
             var _seriesLabelFormatFunction = defaultFormatFunction;
 
-            var _measuresLabelFormatString = "{label}";
+            var _measuresLabelFormatString = "{caption}";
             var _measuresLabelFormatFunction = defaultFormatFunction;
 
-            var _measuresValueFormatString = "{value.label}";
+            var _measuresValueFormatString = "{item.label}";
             var _measuresValueFormatFunction = defaultFormatFunction;
 
             var _groupLabelFormatString = "{label}";
@@ -97,6 +99,26 @@
                 cd.axisTooltipFormat = formatter.axisTickLabelsFormat;
                 cd.legendLabel_tooltip = formatter.legendLabelsFormat;
                 return cd;
+            }
+
+            /**
+             * Gets the visual role mapping for a given plot.
+             *
+             * Extend the default mapping if available, with one specified in
+             * {@link pvc.ext.DetTooltip#plotMappings}.
+             *
+             * @param {pvc.visual.Plot} plot The chart plot.
+             * @returns {Object} The visual role mapping.
+             */
+            function getPlotMapping(plot) {
+              var defaultMapping = getPlotDefaultMapping(plot);
+              var mapping = def.copy(defaultMapping);
+
+              var specifiedPlotMapping = _mappingByPlot && _mappingByPlot[plot.type];
+
+              if(specifiedPlotMapping) def.copy(mapping, specifiedPlotMapping);
+
+              return mapping;
             }
 
             /**
@@ -127,6 +149,48 @@
             formatter.install = formatter;
 
             /**
+             * Gets or sets the mapping of visual roles for different {@link pvc.visual.Plot} plots.
+             * 
+             * Each plot mapping has three visual roles that can be configured:
+             * * `series`   - Accepts zero or one value
+             * * `category` - Accepts zero or one value
+             * * `measures` - Accepts zero or more values
+             *
+             * # Usage
+             * ## Set a mapping to a "scatter" and a "pie" plot type.
+             * 
+             * ```javascript
+             * pvc.ext.detTooltip()
+             *      .plotMappings({
+             *          "scatter": {
+             *              series:   "color",
+             *              category: "category",
+             *              measures: ["x", "y", "color", "size"]
+             *          },
+             *          "pie": {
+             *              series:   "foo",
+             *              category: null,
+             *              measures: ["bar"]
+             *          }
+             *      }).install(this.chartDefinition);
+             * ```
+             *
+             * @alias plotMappings
+             * @memberOf pvc.ext.DetTooltip#
+             * @function
+             * @param {Object} [_] The new value.
+             * @return {pvc.ext.DetTooltip|Object} The property value, when getting, `this` instance, when setting.
+             */
+            formatter.plotMappings = function(_) {
+                if(arguments.length) {
+                    _mappingByPlot = _;
+                    return formatter;
+                }
+
+                return _mappingByPlot;
+            };
+
+            /**
              * Formats an HTML tooltip for a given scene.
              *
              * This function can be called on any `this` context,
@@ -145,7 +209,8 @@
              * @return {string} The tooltip HTML string.
              */
             formatter.format = function(scene) {
-                var model = buildModel.call(formatter, scene);
+                var mapping = getPlotMapping(scene.panel().plot);
+                var model = buildModel.call(formatter, scene, mapping);
 
                 return detTooltipRenderer.call(formatter, model);
             };
@@ -191,9 +256,9 @@
             };
 
             /**
-             * Gets or sets the format string for the label of the category. Used by the default label formatter.
+             * Gets or sets the format string for the label of the category. Used by the default label formater.
              *
-             * Defaults to "{label}:&nbsp;{value.label}".
+             * Defaults to "{caption}:&nbsp;{item.label}".
              *
              * @alias categoryLabelFormatString
              * @memberOf pvc.ext.DetTooltip#
@@ -240,7 +305,7 @@
             /**
              * Gets or sets the format string for the label of the series. Used by the default label formatter.
              *
-             * Defaults to "{value.label}".
+             * Defaults to "{item.label}".
              *
              * @alias seriesLabelFormatString
              * @memberOf pvc.ext.DetTooltip#
@@ -287,7 +352,7 @@
             /**
              * Gets or sets the format string for the label of the measures. Used by the default label formatter.
              *
-             * Defaults to "{label}".
+             * Defaults to "{caption}".
              *
              * @alias measuresLabelFormatString
              * @memberOf pvc.ext.DetTooltip#
@@ -429,131 +494,174 @@
         }
 
         /**
+         * Gets the default mapping for {@link pvc.visual.CategoricalPlot},
+         * {@link pvc.visual.PiePlot} or {@link pvc.visual.MetricPointPlot}.
+         *
+         * @param {pvc.visual.Plot} plot The chart plot.
+         * @returns {Object} The default visual role mapping.
+         */
+        function getPlotDefaultMapping(plot) {
+            if(plot instanceof pvc.visual.CategoricalPlot)
+                return {
+                    series:   "color",
+                    category: "category",
+                    measures: ["value"]
+                };
+
+            if(plot instanceof pvc.visual.PiePlot)
+                return {
+                    series:   "color",
+                    category: null,
+                    measures: ["value"]
+                };
+
+            if(plot instanceof pvc.visual.MetricPointPlot)
+                return {
+                    series:   "color",
+                    category: "category",
+                    measures: ["x", "y", "color", "size"]
+                };
+
+            return {
+                series:   null,
+                category: null,
+                measures: null
+            }
+        }
+
+        /**
          * Builds the tooltip model from the CCC scene information.
          *
-         * @param {Object} scene - The CCC scene.
+         * @param {Object} scene The CCC scene.
+         * @param {Object} mapping Map of visual roles for current plot type
          *
          * @return {Object} The tooltip model.
          */
-        function buildModel(scene) {
-            var tooltipModels = {
-                category: null,
+        function buildModel(scene, mapping) {
+            var tooltipModel = {
+                measures: [],
                 series:   null,
-                measures: [] 
+                category: null
             };
 
-            var dimensions = scene.root.chart().data.type.dimensions();
+            var plot = scene.panel().plot,
+                rootData = scene.chart().data.root,
+                visualRole, item, color;
 
-            for(var key in dimensions) {
-                var dimValue = getDimensionValue(key);
+            var varName = mapping.category;
+            if(varName) {
 
-                if(isContinue(dimValue, key)) continue;
-
-                var dimInfo = {value: dimValue, label: dimensions[key].label || ""};
-
-                if(key === "category") {
-                    var isNumeric = !isNaN(dimValue.value);
-
-                    if(isNumeric) tooltipModels.measures.push(dimInfo);
-                    else tooltipModels.category = dimInfo;
+                visualRole = plot.visualRoles[varName];
+                if(visualRole && visualRole.isBound() && visualRole.isDiscrete()) {
+                    item = getVarItem(scene, varName);
+                    if(item) tooltipModel.category = {
+                        item:    item,
+                        caption: buildCompositeLabel(rootData.type, visualRole) // visual role label
+                    };
 
                 } else {
-                    dimInfo.value = scene.vars[key];
-                    tooltipModels.measures.push(dimInfo);
-                    
+                    // Fallback to support scatter chart not having a category mapped
+                    tooltipModel.category = noBoundCategory(scene, varName);
+
                 }
             }
 
-            tooltipModels.series = getSeriesInfo();
+            varName = mapping.series;
+            if(varName) {
 
-            return tooltipModels;
+                visualRole = plot.visualRoles[varName];
+                if(visualRole && visualRole.isBound() && visualRole.isDiscrete()) {
 
-            // ------ Private functions
-
-            function isContinue(value, key) {
-                if(!value) return true;
-
-                var reg = /^(series|\D+\d)$/;
-                return reg.exec(key) != null;
-            }
-
-            function getDimensionValue(key) {
-                var dimVar  = scene.vars[key]  || {},
-                    dimAtom = scene.atoms[key] || {};
-
-                var value = dimVar.value || dimAtom.value;
-                if(!value) return null;
-
-                var label = dimVar.label || dimAtom.label;
-                return {value: value, label: label};
-            }
-
-            function getSeriesInfo() {
-                var series      = dimensions.series; 
-                var seriesValue = scene.getSeries();
-
-                var rootColor   = scene.root.panel().axes.color;
-                var colorVar    = scene.vars.color;
-                var color       = rootColor.isDiscrete() && colorVar ? rootColor.scale(colorVar).color : rootColor.sceneScale({sceneVarName: 'color'})(scene).color;
-
-                var value;
-                if(seriesValue != null) {
-                    value = {
-                        value: seriesValue,
-                        label: scene.getSeriesLabel()
+                    item = getVarItem(scene, varName);
+                    if(item) tooltipModel.series = {
+                        color:   varName === "color" ? getColorScaleValue(scene) : null,
+                        item:    item,
+                        caption: buildCompositeLabel(rootData.type, visualRole)
                     };
-                } else if(tooltipModels.measures.length > 0) {
-                    var firstMeasure = tooltipModels.measures[0]
-                    value = {value: firstMeasure.value, label: ""};
+                }
+            }
 
-                    if(tooltipModels.category && (!series || tooltipModels.measures.length > 1)) {
-                        value.label = tooltipModels.category.value.label;
-                        tooltipModels.category = null;
-                    } else {
-                        value.label = firstMeasure.label;
+            if(mapping.measures) {
+                def.array.to(mapping.measures).forEach(function(varName) {
+                    visualRole = plot.visualRoles[varName];
+                    if(visualRole && visualRole.isBound() && !visualRole.isDiscrete()) {
+
+                        item = getVarItem(scene, varName);
+                        if(item) tooltipModel.measures.push({
+                            color:   varName === "color" ? getColorScaleValue(scene) : null,
+                            item:    item,
+                            caption: buildCompositeLabel(rootData.type, visualRole)
+                        });
+                    }
+                });
+                
+            }
+
+            return tooltipModel;
+        }
+
+        function getVarItem(scene, varName) {
+            var item = scene.vars[varName];
+
+            return item && item.value != null ? item : null;
+        }
+
+        function getColorScaleValue(scene) {
+            var rootColor = scene.root.panel().axes.color;
+
+            return rootColor.sceneScale({sceneVarName: 'color'})(scene).color;
+        }
+
+        function noBoundCategory(scene, varName) {
+            var rootData = scene.chart().data.root;
+            var datum    = scene.datum;
+            if(datum) {
+                var dimNames = rootData.type.groupDimensionsNames(varName, {assertExists: false});
+                if(dimNames) {
+                    var item = datum.view(dimNames);
+                    if(item.value != null) {
+                        return {
+                            item: item,
+                            caption: dimNames.map(function(dimName) {
+                                return rootData.type.dimensions(dimName).label;
+                            }).join(rootData.labelSep)  
+                        }
                     }
                 }
-
-                return value ? {color: color, value: value, label: (series && series.label) || ""} : null;
             }
+
+            return null;
+        }
+
+        function buildCompositeLabel(complexType, visualRole) {
+            return visualRole.grouping.dimensionNames().map(function(dimName) {
+                return complexType.dimensions(dimName).label;
+            }).join(", ");
         }
 
         /**
          * The default format function replaces tokens in the received format string
          * with values from the current tooltipModel subject (category, series, measure).
          *
-         * @param {Object} tooltipModel - The tooltip model object (not used by the default formatter).
-         * @param {Object} subject - The current tooltip subject being formatted.
+         * @param {Object} subject - The current tooltip subject being formated.
          * @param {string} formatString - The format string.
          *
          * @return {string} The formatted text.
          */
-        function defaultFormatFunction(tooltipModel, subject, formatString) {
-            var matcher = /\{(.*?)\}/g;
-
-            var result = formatString;
-
-            var match;
-            while(match = matcher.exec(formatString)) {
-                var alternatives = match[1].split("|");
-
-                while(alternatives.length) {
-                    var path = alternatives.shift().split(".");
-
-                    var value = subject;
-                    while(value && path.length) {
-                        value = value[path.shift()];
-                    }
-
-                    if(value) {
-                        result = result.replace(match[0], def.html.escape(value.toString()));
-                        // skip remaining alternatives
-                        break;
-                    }
+        function defaultFormatFunction(subject, formatString) {
+            var missingPathMarker = {};
+            var scope = function(alternativesText) {
+                var alternatives = alternativesText.split("|");
+                var i = -1;
+                var L = alternatives.length;
+                while(++i < L) {
+                    var value = def.getPath(subject, alternatives[i], missingPathMarker);
+                    if(value !== missingPathMarker)
+                        return value == null ? "" : def.html.escape(value.toString());
                 }
-            }
+            };
 
-            return result;
+            return def.format(formatString, scope);
         }
 
         /**
@@ -576,7 +684,7 @@
                     axisLabelElement.className = "group-label";
 
                     var labelElement = document.createElement("h1");
-                    labelElement.innerHTML = defaultFormatFunction(tooltipModel, group, this.groupLabelFormatString());
+                    labelElement.innerHTML = defaultFormatFunction(group, this.groupLabelFormatString());
 
                     axisLabelElement.appendChild(labelElement);
 
@@ -588,74 +696,82 @@
 
             if(tooltipModel.category) {
                 var titleElement = document.createElement("h1");
-                titleElement.innerHTML = defaultFormatFunction(tooltipModel, tooltipModel.category, this.categoryLabelFormatString());
+                titleElement.innerHTML = defaultFormatFunction(tooltipModel.category, this.categoryLabelFormatString());
 
                 baseElement.appendChild(titleElement);
             }
 
+            var seriesElement, labelElement;
+
             if(tooltipModel.series != null) {
-                var seriesElement = document.createElement("div");
+                seriesElement = document.createElement("div");
                 seriesElement.className = "series";
 
-                var labelElement = document.createElement("h2");
+                renderColorMark(seriesElement, tooltipModel.series);
 
-                if(tooltipModel.series.color != null) {
-                    var colorElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                    colorElement.style.fill = tooltipModel.series.color;
-                    colorElement.setAttribute("viewBox", "0 0 4 4");
-                    colorElement.setAttribute("class", "color");
-
-                    var circleElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                    circleElement.setAttribute("cx", "2");
-                    circleElement.setAttribute("cy", "2");
-                    circleElement.setAttribute("r", "2");
-
-                    colorElement.appendChild(circleElement);
-
-                    seriesElement.appendChild(colorElement);
-                }
-
-                labelElement.innerHTML = defaultFormatFunction(tooltipModel, tooltipModel.series, this.seriesLabelFormatString());
+                labelElement = document.createElement("h2");
+                labelElement.innerHTML = defaultFormatFunction(tooltipModel.series, this.seriesLabelFormatString());
                 seriesElement.appendChild(labelElement);
 
                 baseElement.appendChild(seriesElement);
+            }
 
-                if(tooltipModel.measures) {
-                    if(tooltipModel.measures.length === 1) {
-                        var measure = tooltipModel.measures[0];
-                        var valueElement = document.createElement("span");
-                        valueElement.innerHTML = defaultFormatFunction(tooltipModel, measure, this.measuresValueFormatString());
+            if(tooltipModel.measures) {
+                if(tooltipModel.measures.length === 1 && tooltipModel.series) {
+                    renderMeasureValue.call(this, seriesElement, tooltipModel.measures[0]);
 
-                        seriesElement.appendChild(valueElement);
-                    } else {
-                        var measuresElement = document.createElement("ul");
-                        measuresElement.className = "measures-container";
+                } else {
+                    var measuresElement = document.createElement("ul");
+                    measuresElement.className = "measures-container";
 
-                        tooltipModel.measures.forEach(function(measure) {
-                            var measureElement = document.createElement("li");
-                            measureElement.className = "measure";
+                    tooltipModel.measures.forEach(function(measure) {
+                        var measureElement = document.createElement("li");
+                        measureElement.className = "measure";
 
-                            var labelElement = document.createElement("h3");
-                            labelElement.innerHTML = defaultFormatFunction(tooltipModel, measure, this.measuresLabelFormatString());
+                        renderColorMark(measureElement, measure);
 
-                            measureElement.appendChild(labelElement);
+                        labelElement = document.createElement("h3");
+                        labelElement.innerHTML = defaultFormatFunction(measure, this.measuresLabelFormatString());
 
-                            if(measure.value != null) {
-                                var valueElement = document.createElement("span");
-                                valueElement.innerHTML = defaultFormatFunction(tooltipModel, measure, this.measuresValueFormatString());
+                        measureElement.appendChild(labelElement);
 
-                                measureElement.appendChild(valueElement);
-                            }
+                        renderMeasureValue.call(this, measureElement, measure);
 
-                            measuresElement.appendChild(measureElement);
-                        }, this);
+                        measuresElement.appendChild(measureElement);
 
-                        baseElement.appendChild(measuresElement);
-                    }
+                    }, this);
+
+                    baseElement.appendChild(measuresElement);
                 }
             }
 
             return baseElement.innerHTML;
+        }
+
+        function renderColorMark(parentElement, roleInfo) {
+            if(roleInfo.color) {
+                var colorElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                colorElement.style.fill = roleInfo.color;
+                colorElement.setAttribute("viewBox", "0 0 4 4");
+                colorElement.setAttribute("class", "color");
+
+                var circleElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circleElement.setAttribute("cx", "2");
+                circleElement.setAttribute("cy", "2");
+                circleElement.setAttribute("r", "2");
+
+                colorElement.appendChild(circleElement);
+                parentElement.appendChild(colorElement);
+            }
+        }
+
+        function renderMeasureValue(parentElement, roleInfo) {
+            if(roleInfo.item != null) {
+                var valueElement = document.createElement("span");
+                valueElement.innerHTML = defaultFormatFunction(roleInfo, this.measuresValueFormatString());
+
+                parentElement.appendChild(valueElement);
+            }
         }
 
         (pvc.ext || (pvc.ext = {})).detTooltip = detTooltip;
