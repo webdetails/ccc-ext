@@ -1,207 +1,288 @@
 /* Override tipsy defaults */
-.ccc-ext-det-tooltip.tipsy
-{
-    margin: 0;
-    padding: 0;
+.ccc-ext-det-tooltip.tipsy {
+  margin: 0;
+  padding: 0;
 }
 
-.ccc-ext-det-tooltip.tipsy .tipsy-arrow
-{
-    display: none !important;
-    visibility: hidden;
+.ccc-ext-det-tooltip.tipsy .tipsy-arrow {
+  display: none !important;
+  visibility: hidden;
 }
 
-.ccc-ext-det-tooltip.tipsy .tipsy-inner
-{
-    max-width: none;
-    margin: 0;
-    padding: 0;
+.ccc-ext-det-tooltip.tipsy .tipsy-inner {
+  max-width: none;
+  margin: 0;
+  padding: 0;
 
-    color: black;
-    border: 0;
-    background-color: white;
-    box-shadow: 0;
+  color: black;
+  border: 0;
+  background-color: white;
+  box-shadow: 0;
 }
 
 /* Tooltip styles */
-.ccc-ext-det-tooltip *
-{
-    font-family: 'open sans' sans;
-    font-size: 10px;
-    font-weight: 400;
+.ccc-ext-det-tooltip * {
+  font-family: "open sans" sans;
+  font-size: 10px;
+  font-weight: 400;
 
-    letter-spacing: .04em;
+  letter-spacing: 0.04em;
 
-    color: #666;
+  color: #666666;
 }
 
-.ccc-ext-det-tooltip .tipsy-inner
-{
-    border: solid 1px #f2f2f2;
-    box-shadow: 0 0 4px 0 rgba(0,0,0,.4);
+.ccc-ext-det-tooltip .tipsy-inner {
+  border: solid 1px #f2f2f2;
+  box-shadow: 0 0 4px 0 rgba(0,0,0,0.4);
 }
 
-.ccc-ext-det-tooltip h1
-{
-    line-height: 2.2em;
+.ccc-ext-det-tooltip h1 {
+  line-height: 2.2em;
 
-    margin: 0;
-    padding: 0 1em;
+  margin: 0;
+  padding: 0 1em;
 
-    text-align: left;
+  text-align: left;
 
-    border-bottom: solid 1px #f2f2f2;
+  border-bottom: solid 1px #f2f2f2;
 }
 
-.ccc-ext-det-tooltip .series
-{
-    line-height: 1.6em;
+.ccc-ext-det-tooltip .series {
+  line-height: 1.6em;
 
-    display: flex;
-    flex-direction: row;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display:         flex;
 
-    min-height: 1.6em;
-    margin: 0;
-    padding: 1em;
+  min-height: 1.6em;
+  margin: 0;
+  padding: 1em;
 
-    flex: 1;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
+  -webkit-flex-direction: row;
+  -moz-box-orient: horizontal;
+  -moz-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+
+  -webkit-flex: 1;
+  -moz-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+
+  -webkit-align-items: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+          align-items: center;
+
+  -webkit-justify-content: flex-start;
+  -moz-box-pack: start;
+  -ms-flex-pack: start;
+          justify-content: flex-start;
+
+  -webkit-flex-wrap: nowrap;
+      -ms-flex-wrap: nowrap;
+          flex-wrap: nowrap;
 }
 
-.ccc-ext-det-tooltip .series .color
-{
-    width: .8em;
-    height: .8em;
-    margin-right: .4em;
-    padding: 0;
+.ccc-ext-det-tooltip .series .color {
+  width: 0.8em;
+  height: 0.8em;
+  margin-right: 0.4em;
+  padding: 0;
 
-    flex-grow: 0;
-    flex-shrink: 0;
-    flex-basis: .8em;
+  -webkit-flex-grow: 0;
+  -moz-box-flex: 0;
+  -ms-flex-positive: 0;
+          flex-grow: 0;
+
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+          flex-shrink: 0;
+
+  -webkit-flex-basis: 0.8em;
+  -ms-flex-preferred-size: 0.8em;
+          flex-basis: 0.8em;
 }
 
-.ccc-ext-det-tooltip .series h2
-{
-    overflow: hidden;
+.ccc-ext-det-tooltip .series h2 {
+  overflow: hidden;
 
-    max-width: 17.5em;
-    max-height: 4.8em;
-    margin: 0;
-    padding: 0;
+  max-width: 17.5em;
+  max-height: 4.8em;
+  margin: 0;
+  padding: 0;
 
-    text-align: left;
+  text-align: left;
+  word-wrap: break-word;
 
-    flex-grow: 1;
+  overflow-wrap: break-word;
+
+  -webkit-flex-grow: 1;
+  -moz-box-flex: 1;
+  -ms-flex-positive: 1;
+          flex-grow: 1;
 }
 
-.ccc-ext-det-tooltip .series span
-{
-    font-size: 15px;
+.ccc-ext-det-tooltip .series span {
+  font-size: 15px;
 
-    margin-left: 1em;
+  margin-left: 1em;
 
-    text-align: right;
+  text-align: right;
 
-    flex-grow: 1;
-    flex-shrink: 1;
+  -webkit-flex-grow: 1;
+  -moz-box-flex: 1;
+  -ms-flex-positive: 1;
+          flex-grow: 1;
+
+  -webkit-flex-shrink: 1;
+  -ms-flex-negative: 1;
+          flex-shrink: 1;
 }
 
-.ccc-ext-det-tooltip .measures-container
-{
-    position: relative;
+.ccc-ext-det-tooltip .measures-container {
+  position: relative;
 
-    margin: 0;
-    padding: .5em 1em;
+  margin: 0;
+  padding: 0.5em 1em;
 
-    list-style: none;
+  list-style: none;
 
-    border-top: solid 1px #f2f2f2;
+  border-top: solid 1px #f2f2f2;
 }
 
-.ccc-ext-det-tooltip .measures-container .measure
-{
-    line-height: 1.6em;
+.ccc-ext-det-tooltip .measures-container .measure {
+  line-height: 1.6em;
 
-    display: flex;
-    flex-direction: row;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display:         flex;
 
-    min-height: 1.6em;
-    margin: 0;
-    padding: .5em 0;
+  min-height: 1.6em;
+  margin: 0;
+  padding: 0.5em 0;
 
-    flex: 1;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
+  -webkit-flex-direction: row;
+  -moz-box-orient: horizontal;
+  -moz-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+
+  -webkit-flex: 1;
+  -moz-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+
+  -webkit-align-items: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+          align-items: center;
+
+  -webkit-justify-content: flex-start;
+  -moz-box-pack: start;
+  -ms-flex-pack: start;
+          justify-content: flex-start;
+
+  -webkit-flex-wrap: nowrap;
+      -ms-flex-wrap: nowrap;
+          flex-wrap: nowrap;
 }
 
-.ccc-ext-det-tooltip .measures-container .measure h3
-{
-    overflow: hidden;
+.ccc-ext-det-tooltip .measures-container .measure h3 {
+  overflow: hidden;
 
-    max-width: 17.5em;
-    max-height: 4.8em;
-    margin: 0;
-    padding: 0;
+  max-width: 17.5em;
+  max-height: 4.8em;
+  margin: 0;
+  padding: 0;
 
-    text-align: left;
+  text-align: left;
 
-    flex-grow: 1;
+  -webkit-flex-grow: 1;
+  -moz-box-flex: 1;
+  -ms-flex-positive: 1;
+          flex-grow: 1;
 }
 
-.ccc-ext-det-tooltip .measures-container .measure span
-{
-    font-size: 15px;
+.ccc-ext-det-tooltip .measures-container .measure span {
+  font-size: 15px;
 
-    margin-left: 1em;
+  margin-left: 1em;
 
-    text-align: right;
+  text-align: right;
 
-    flex-grow: 1;
-    flex-shrink: 1;
+  -webkit-flex-grow: 1;
+  -moz-box-flex: 1;
+  -ms-flex-positive: 1;
+          flex-grow: 1;
+
+  -webkit-flex-shrink: 1;
+  -ms-flex-negative: 1;
+          flex-shrink: 1;
 }
 
-.ccc-ext-det-tooltip .axis-tick-label-container
-{
-    position: relative;
+.ccc-ext-det-tooltip .axis-tick-label-container {
+  position: relative;
 
-    margin: 0;
-    padding: .5em 1em;
+  margin: 0;
+  padding: 0.5em 1em;
 
-    list-style: none;
+  list-style: none;
 }
 
-.ccc-ext-det-tooltip .axis-tick-label-container .axis-tick-label
-{
-    line-height: 1.6em;
+.ccc-ext-det-tooltip .axis-tick-label-container .axis-tick-label {
+  line-height: 1.6em;
 
-    display: flex;
-    flex-direction: row;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display:         flex;
+          flex-direction: row;
 
-    min-height: 1.6em;
-    margin: 0;
-    padding: .5em 0;
+  min-height: 1.6em;
+  margin: 0;
+  padding: 0.5em 0;
 
-    flex: 1;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
+  -webkit-flex-direction: row;
+  -moz-box-orient: horizontal;
+  -moz-box-direction: normal;
+      -ms-flex-direction: row;
+
+  -webkit-flex: 1;
+  -moz-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+
+  -webkit-align-items: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+          align-items: center;
+
+  -webkit-justify-content: flex-start;
+  -moz-box-pack: start;
+  -ms-flex-pack: start;
+          justify-content: flex-start;
+
+  -webkit-flex-wrap: nowrap;
+      -ms-flex-wrap: nowrap;
+          flex-wrap: nowrap;
 }
 
-.ccc-ext-det-tooltip .axis-tick-label-container .axis-tick-label h1
-{
-    overflow: hidden;
+.ccc-ext-det-tooltip .axis-tick-label-container .axis-tick-label h1 {
+  overflow: hidden;
 
-    border: 0;
+  max-height: 4.8em;
+  margin: 0;
+  padding: 0;
 
-    max-width: 27.5em;
-    max-height: 4.8em;
-    margin: 0;
-    padding: 0;
+  text-align: left;
 
-    text-align: left;
+  border: 0;
 
-    flex-grow: 1;
+  -webkit-flex-grow: 1;
+  -moz-box-flex: 1;
+  -ms-flex-positive: 1;
+          flex-grow: 1;
 }
