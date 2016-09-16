@@ -151,7 +151,7 @@
 
             /**
              * Gets or sets the mapping of visual roles for different {@link pvc.visual.Plot} plots.
-             * 
+             *
              * Each plot mapping has three visual roles that can be configured:
              * * `series`   - Accepts zero or one value
              * * `category` - Accepts zero or one value
@@ -159,7 +159,7 @@
              *
              * # Usage
              * ## Set a mapping to a "scatter" and a "pie" plot type.
-             * 
+             *
              * ```javascript
              * pvc.ext.detTooltip()
              *      .plotMappings({
@@ -548,13 +548,19 @@
 
             var plot = scene.panel().plot,
                 rootData = scene.chart().data.root,
+                mappingMeasures = mapping.measures ? def.array.to(mapping.measures) : null,
                 visualRole, item, color;
+
+            // measures mappings have precedence on category and series mappings for
+            // non-discrete visual roles.
+            var hasMeasureVar = function(aVarName) {
+                return !!mappingMeasures && mappingMeasures.indexOf(aVarName) >= 0;
+            };
 
             var varName = mapping.category;
             if(varName) {
-
                 visualRole = plot.visualRoles[varName];
-                if(visualRole && visualRole.isBound() && visualRole.isDiscrete()) {
+                if(visualRole && visualRole.isBound() && (visualRole.isDiscrete() || !hasMeasureVar(varName))) {
                     item = getVarItem(scene, varName);
                     if(item) tooltipModel.category = {
                         item:    item,
@@ -562,17 +568,17 @@
                     };
 
                 } else {
-                    // Fallback to support scatter chart not having a category mapped
-                    tooltipModel.category = noBoundCategory(scene, varName);
+                    // Fallback to support scatter chart not having a category visual role
+                    // but instead having dimensions in the "_rows_" dimension group.
+                    tooltipModel.category = noBoundCategory(scene, "_rows_");
 
                 }
             }
 
             varName = mapping.series;
             if(varName) {
-
                 visualRole = plot.visualRoles[varName];
-                if(visualRole && visualRole.isBound() && visualRole.isDiscrete()) {
+                if(visualRole && visualRole.isBound() && (visualRole.isDiscrete() || !hasMeasureVar(varName))) {
 
                     item = getVarItem(scene, varName);
                     if(item) tooltipModel.series = {
@@ -583,8 +589,8 @@
                 }
             }
 
-            if(mapping.measures) {
-                def.array.to(mapping.measures).forEach(function(varName) {
+            if(mappingMeasures) {
+                mappingMeasures.forEach(function(varName) {
                     visualRole = plot.visualRoles[varName];
                     if(visualRole && visualRole.isBound() && !visualRole.isDiscrete()) {
 
@@ -596,7 +602,7 @@
                         });
                     }
                 });
-                
+
             }
 
             return tooltipModel;
@@ -649,7 +655,7 @@
                             item: item,
                             caption: dimNames.map(function(dimName) {
                                 return rootData.type.dimensions(dimName).label;
-                            }).join(rootData.labelSep)  
+                            }).join(rootData.labelSep)
                         }
                     }
                 }
