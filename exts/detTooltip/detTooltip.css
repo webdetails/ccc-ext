@@ -22,7 +22,7 @@
 
 /* Tooltip styles */
 .ccc-ext-det-tooltip * {
-  font-family: OpenSansRegular sans;
+  font-family: "OpenSansRegular", sans-serif;
   font-size: 10px;
   font-weight: 400;
 
