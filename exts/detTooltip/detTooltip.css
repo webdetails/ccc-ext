@@ -286,3 +286,16 @@
   -ms-flex-positive: 1;
           flex-grow: 1;
 }
+
+.ccc-ext-det-tooltip footer {
+  position: relative;
+
+  margin: 0;
+  padding: 5px 10px;
+
+  list-style: none;
+
+  text-align: center;
+
+  border-top: solid 1px #f2f2f2;
+}
