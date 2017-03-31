@@ -112,14 +112,14 @@
              * @return {Object} The visual role mapping.
              */
             function getPlotMapping(plot) {
-              var defaultMapping = getPlotDefaultMapping(plot);
-              var mapping = def.copy(defaultMapping);
+                var defaultMapping = getPlotDefaultMapping(plot);
+                var mapping = def.copy(defaultMapping);
 
-              var specifiedPlotMapping = _mappingByPlot && _mappingByPlot[plot.type];
+                var specifiedPlotMapping = _mappingByPlot && _mappingByPlot[plot.type];
 
-              if(specifiedPlotMapping) def.copy(mapping, specifiedPlotMapping);
+                if(specifiedPlotMapping) def.copy(mapping, specifiedPlotMapping);
 
-              return mapping;
+                return mapping;
             }
 
             /**
@@ -211,7 +211,7 @@
              */
             formatter.format = function(scene) {
                 var mapping = getPlotMapping(scene.panel().plot);
-                var model = buildModel.call(formatter, scene, mapping);
+                var model = buildModel.call(this, scene, mapping);
 
                 return detTooltipRenderer.call(formatter, model);
             };
