@@ -607,7 +607,7 @@
 
             var app = this.model != null ? this.model.application : null;
             if(app != null && app.getDoubleClickTooltip != null) {
-                var complex = scene.datum;
+                var complex = scene.group || scene.datum;
                 if(!complex.isVirtual) {
                     try {
                         var pointFilter = this._complexToFilter(complex);
