@@ -68,10 +68,10 @@
         function detTooltip() {
             var _mappingByPlot = null;
 
-            var _categoryLabelFormatString = "{caption}:&nbsp;{item.label}";
+            var _categoryLabelFormatString = "{caption}:&nbsp;{item.absLabel|item.label}";
             var _categoryLabelFormatFunction = defaultFormatFunction;
 
-            var _seriesLabelFormatString = "{item.label}";
+            var _seriesLabelFormatString = "{item.absLabel|item.label}";
             var _seriesLabelFormatFunction = defaultFormatFunction;
 
             var _measuresLabelFormatString = "{caption}";
@@ -112,14 +112,14 @@
              * @return {Object} The visual role mapping.
              */
             function getPlotMapping(plot) {
-              var defaultMapping = getPlotDefaultMapping(plot);
-              var mapping = def.copy(defaultMapping);
+                var defaultMapping = getPlotDefaultMapping(plot);
+                var mapping = def.copy(defaultMapping);
 
-              var specifiedPlotMapping = _mappingByPlot && _mappingByPlot[plot.type];
+                var specifiedPlotMapping = _mappingByPlot && _mappingByPlot[plot.type];
 
-              if(specifiedPlotMapping) def.copy(mapping, specifiedPlotMapping);
+                if(specifiedPlotMapping) def.copy(mapping, specifiedPlotMapping);
 
-              return mapping;
+                return mapping;
             }
 
             /**
@@ -211,7 +211,7 @@
              */
             formatter.format = function(scene) {
                 var mapping = getPlotMapping(scene.panel().plot);
-                var model = buildModel.call(formatter, scene, mapping);
+                var model = buildModel.call(this, scene, mapping);
 
                 return detTooltipRenderer.call(formatter, model);
             };
@@ -564,7 +564,7 @@
                     item = getVarItem(scene, varName);
                     if(item) tooltipModel.category = {
                         item:    item,
-                        caption: buildCompositeLabel(rootData.type, visualRole) // visual role label
+                        caption: buildCompositeLabel(rootData.type, visualRole, scene) // visual role label
                     };
 
                 } else {
@@ -584,7 +584,7 @@
                     if(item) tooltipModel.series = {
                         color:   varName === "color" ? getColorScaleValue(scene) : null,
                         item:    item,
-                        caption: buildCompositeLabel(rootData.type, visualRole)
+                        caption: buildCompositeLabel(rootData.type, visualRole, scene)
                     };
                 }
             }
@@ -687,13 +687,21 @@
          *
          * @param {Object} complexType - The root data type object.
          * @param {Object} visualRole - A chart visual role.
+         * @param {Object} scene - A chart scene.
          *
          * @return {string} The composite label.
          */
-        function buildCompositeLabel(complexType, visualRole) {
-            return visualRole.grouping.dimensionNames().map(function(dimName) {
-                return complexType.dimensions(dimName).label;
-            }).join(", ");
+        function buildCompositeLabel(complexType, visualRole, scene) {
+            var labels = [];
+
+            visualRole.grouping.dimensionNames().forEach(function(dimName) {
+                var atom;
+                if(!scene || ((atom = scene.atoms[dimName]) && atom.value != null)) {
+                  labels.push(complexType.dimensions(dimName).label);
+                }
+            });
+
+            return labels.join(", ");
         }
 
         /**
