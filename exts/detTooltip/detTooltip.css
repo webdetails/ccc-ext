@@ -143,7 +143,7 @@
   position: relative;
 
   margin: 0;
-  padding: 0.5em 1em;
+  padding: 0em 1em;
 
   list-style: none;
 
@@ -160,7 +160,7 @@
 
   min-height: 1.6em;
   margin: 0;
-  padding: 0.5em 0;
+  padding: 0 0 1em 0;
 
   -webkit-flex-direction: row;
   -moz-box-orient: horizontal;
@@ -186,6 +186,10 @@
   -webkit-flex-wrap: nowrap;
   -ms-flex-wrap: nowrap;
   flex-wrap: nowrap;
+}
+
+.ccc-ext-det-tooltip .measures-container .measure:first-child {
+  padding: 1em 0 1em 0;
 }
 
 .ccc-ext-det-tooltip .measures-container .measure h3 {
@@ -289,7 +293,7 @@
   position: relative;
 
   margin: 0;
-  padding: 0.5em 1em;
+  padding: 1em 1em;
 
   list-style: none;
 
