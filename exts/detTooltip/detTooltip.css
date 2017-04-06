@@ -36,6 +36,10 @@
   box-shadow: 0 0 4px 0 rgba(0,0,0,0.4);
 }
 
+.ccc-ext-det-tooltip .tipsy-inner > :not(:first-child) {
+  border-top: solid 1px #f2f2f2;
+}
+
 .ccc-ext-det-tooltip h1 {
   margin: 0;
   padding: 1em 1em;
@@ -79,8 +83,6 @@
   -webkit-flex-wrap: nowrap;
   -ms-flex-wrap: nowrap;
   flex-wrap: nowrap;
-
-  border-top: solid 1px #f2f2f2;
 }
 
 .ccc-ext-det-tooltip .color {
@@ -146,8 +148,6 @@
   padding: 0em 1em;
 
   list-style: none;
-
-  border-top: solid 1px #f2f2f2;
 }
 
 .ccc-ext-det-tooltip .measures-container .measure {
@@ -298,6 +298,4 @@
   list-style: none;
 
   text-align: center;
-
-  border-top: solid 1px #f2f2f2;
 }
