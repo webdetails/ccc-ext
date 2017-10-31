@@ -564,7 +564,7 @@
                     item = getVarItem(scene, varName);
                     if(item) tooltipModel.category = {
                         item:    item,
-                        caption: buildCompositeLabel(rootData.type, visualRole, scene) // visual role label
+                        caption: buildRoleLabel(visualRole, scene) // visual role label
                     };
 
                 } else {
@@ -584,7 +584,7 @@
                     if(item) tooltipModel.series = {
                         color:   varName === "color" ? getColorScaleValue(scene) : null,
                         item:    item,
-                        caption: buildCompositeLabel(rootData.type, visualRole, scene)
+                        caption: buildRoleLabel(visualRole, scene)
                     };
                 }
             }
@@ -598,7 +598,7 @@
                         if(item) tooltipModel.measures.push({
                             color:   varName === "color" ? getColorScaleValue(scene) : null,
                             item:    item,
-                            caption: buildCompositeLabel(rootData.type, visualRole)
+                            caption: buildRoleLabel(visualRole, scene)
                         });
                     }
                 });
@@ -682,23 +682,52 @@
         }
 
         /**
-         * Builds the composite label of a given visual role, taking into account
-         * all its dimensions.
+         * Builds the label for a given visual role, taking into account the dimensions it is bound to.
          *
-         * @param {Object} complexType - The root data type object.
-         * @param {Object} visualRole - A chart visual role.
-         * @param {Object} scene - A chart scene.
+         * For continuous roles, the label of the bound dimension in the given scene is used.
          *
-         * @return {string} The composite label.
+         * For discrete roles,
+         * the labels of the dimensions for which the scene does not contain a non-null atom in its `atoms` map are not included.
+         * This ensures that only the dimensions that were actually used to group the data that underlies the
+         * given scene are actually included.
+         *
+         * @param {!pvc.visual.Role} visualRole - A chart visual role.
+         * @param {!pvc.visual.Scene} scene - A chart scene. When not provided then the visual role must not be discrete.
+         *
+         * @return {string} The label.
          */
-        function buildCompositeLabel(complexType, visualRole, scene) {
+        function buildRoleLabel(visualRole, scene) {
+
+            var isSingleGroupScene = !!scene.group && scene.groups.length === 1;
+
+            if(visualRole.isMeasureEffective && isSingleGroupScene) {
+
+                var valueDimName = visualRole.getBoundDimensionName(scene.group);
+
+                return scene.group.type.dimensions(valueDimName).label;
+            }
+
+            // ----
+
             var labels = [];
 
-            visualRole.grouping.dimensionNames().forEach(function(dimName) {
-                var atom;
-                if(!scene || ((atom = scene.atoms[dimName]) && atom.value != null)) {
-                  labels.push(complexType.dimensions(dimName).label);
+            visualRole.grouping.dimensions().each(function(dimSpec) {
+
+                if(isSingleGroupScene) {
+                    // Is the dimension locally specified in this scene (even if with a null value)?
+                    if(scene.group.getSpecifiedAtom(dimSpec.name) === null) {
+                        return;
+                    }
+                } else {
+                    // Use this weaker form that excludes null-valued atoms.
+                    var atom = scene.atoms[dimSpec.name];
+                    if(!atom || atom.value == null) {
+                        return;
+                    }
                 }
+
+                // Country, Line, Measure Discriminator:
+                labels.push(dimSpec.dimensionType.label);
             });
 
             return labels.join(", ");
@@ -740,6 +769,7 @@
         function detTooltipRenderer(tooltipModel) {
             var baseElement = document.createElement("div");
 
+            // Supports axis tick scenes where several tick child data have been grouped into a single tick/scene.
             if(tooltipModel.groups) {
                 var axisTickLabelsElement = document.createElement("ul");
                 axisTickLabelsElement.className = "group-container";

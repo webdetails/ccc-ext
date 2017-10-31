@@ -32,6 +32,14 @@
     </div>
     <div id="example3"></div>
 </div>
+
+<!-- Example 4 -->
+<div class="example">
+    <div class="code">
+        <pre>pvc.ext.detTooltip().install(cd);</pre>
+    </div>
+    <div id="example4"></div>
+</div>
 <script>
 require(['cdf/lib/CCC/pvc', 'data', './detTooltip'], function(pvc, data) {
     var cd;
@@ -96,6 +104,45 @@ require(['cdf/lib/CCC/pvc', 'data', './detTooltip'], function(pvc, data) {
 
     new pvc.LineChart(cd)
         .setData(data.relational_01_neg, {crosstabMode: false})
+        .render();
+
+    // ----------
+    // Example 4 - Bar Chart 2
+
+    cd = {
+        canvas: "example4",
+        width:  700,
+        height: 350,
+        animate:    false,
+        selectable: true,
+        hoverable:  true,
+        legend: true,
+        legendPosition: "right",
+        plots: [
+            {
+                name: "main",
+                stacked: true,
+                visualRoles: {
+                    series: "series, valueRole.dim",
+                    value: "value"
+                }
+            },
+            {
+                type: "point",
+                stacked: true,
+                orthoAxis: 2,
+                visualRoles: {
+                    value: "value2"
+                }
+            }
+        ]
+    };
+
+    pvc.ext.detTooltip()
+        (cd);
+
+    new pvc.BarChart(cd)
+        .setData(data.relational_01_2measures_neg, {crosstabMode: false})
         .render();
 });
 </script>
