@@ -528,8 +528,8 @@
         function getItemValue(itemScene, allCatsAggFun, allCatsAggMode, useActiveCategory, useVisible) {
 
             var chart = itemScene.chart(),
-                catDimNames = chart.visualRoles.category.grouping.dimensionNames(),
-                valueDimName = chart.visualRoles.value.firstDimensionName(),
+                categMainDimNames = chart.visualRoles.category.grouping.dimensionNames(),
+                valueDimName = chart.visualRoles.value.getBoundDimensionName(itemScene.data()),
                 activeCatView, result, activeValuesByCategory, valueCacheKey;
 
             if(useActiveCategory) {
@@ -539,7 +539,7 @@
 
             if(activeCatView) {
                 // No aggregation.
-                valueCacheKey = "__valueActive" + (useVisible ? "Visible" : "")
+                valueCacheKey = "__valueActive" + (useVisible ? "Visible" : "");
                 activeValuesByCategory = def.lazy(itemScene, valueCacheKey);
 
                 result = def.getOwn(activeValuesByCategory, activeCatView.key);
@@ -553,8 +553,8 @@
 
             if(!result) {
                 var getDatumValue = function(datum) {
-                            return datum.atoms[valueDimName].value;
-                        };
+                    return datum.atoms[valueDimName].value;
+                };
 
                 // When there is an active category, just sum up the values of every datum
                 // having that category. Categorical charts do this for each distinct pair
@@ -575,15 +575,15 @@
                 if(activeCatView) {
                     // Fast, no memory allocation test (compared to computing category key).
                     var hasActiveCategory = function(datum) {
-                                var i = catDimNames.length;
-                                while(i--)
-                                    if(activeCatView.atoms[catDimNames[i]].value
-                                        !==
-                                       datum.atoms[catDimNames[i]].value)
-                                        return false;
+                        var i = categMainDimNames.length;
+                        while(i--)
+                            if(activeCatView.atoms[categMainDimNames[i]].value
+                                !==
+                               datum.atoms[categMainDimNames[i]].value)
+                                return false;
 
-                                return true;
-                            };
+                        return true;
+                    };
 
                     value = itemScene.datums()
                             .where(function(datum) {
@@ -600,7 +600,7 @@
                                 return (!useVisible || datum.isVisible) && !datum.isNull;
                             })
                             .multipleIndex(function(datum) {
-                                return cdo.Complex.compositeKey(datum, catDimNames);
+                                return cdo.Complex.compositeKey(datum, categMainDimNames);
                             });
 
                     // Agg over categories

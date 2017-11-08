@@ -273,9 +273,9 @@
 
         function buildModel(scene) {
             var rootScene  = scene.root,
-                //catIndex   = scene.childIndex(),
-                catValue   = scene.getCategory(),
-                valueDimName = rootScene.panel().visualRoles.value.firstDimensionName(),
+                //catIndex = scene.childIndex(),
+                catValue = scene.getCategory(),
+                valueDimName = rootScene.panel().visualRoles.value.getBoundDimensionName(scene.group),
                 valueDim   = rootScene.data().dimensions(valueDimName),
                 colorScale = rootScene.panel().axes.color.isDiscrete()
                     ? rootScene.panel().axes.color.scale
